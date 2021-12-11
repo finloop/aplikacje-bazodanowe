@@ -118,13 +118,16 @@ CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS(restaura
                                                           address_ VARCHAR,
                                                           street_ VARCHAR,
                                                           postalcode_ VARCHAR(5),
-                                                          cityname_ VARCHAR)
+                                                          cityname_ VARCHAR,
+                                                          dishes_ VARCHAR[][])
     LANGUAGE plpgsql as $$
 DECLARE
     restaurant_id int;
     restaurant_max_id int;
     contactinfo_id int;
     address_id int;
+    dish_id int;
+    dish_ VARCHAR[];
 BEGIN
      -- Check if restaurant exists
     SELECT restaurants.id INTO restaurant_id
@@ -140,7 +143,23 @@ BEGIN
         -- Insert new restaurant
         INSERT INTO restaurants(id, contactinfoid, name, addressid)
             VALUES (restaurant_max_id, contactinfo_id, restaurantname_, address_id);
+        -- Add dishes to new restaurant
+        FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
+            SELECT MAX(id)+1 INTO dish_id FROM dishes;
+            INSERT INTO dishes
+                       (id, name, price, waittime, restaurantid)
+                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int), CAST(dish_[3] AS int), restaurant_max_id);
+        END LOOP;
 
     END IF;
 END;$$;
--- CALL RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS('Woda i mąka', 'wodaimaka@gmail.com', '123456111', '12A', 'Popiełuszki', '38000', 'Rzeszów');
+--CALL RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS('Woda i mąka',
+--                                                 'wodaimaka@gmail.com',
+--                                                 '123456111', '12A',
+--                                                 'Popiełuszki',
+--                                                 '38000',
+--                                                 'Rzeszów',
+--                                                 ARRAY[
+--                                                     ARRAY['Naleśniki', '12', '15'],
+--                                                     ARRAY['Panini', '10', '15']
+--                                                 ]);
