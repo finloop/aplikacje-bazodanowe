@@ -57,38 +57,57 @@ END;$$;
 -- SELECT * FROM  CREATE_CITY_IF_NOT_EXISTS('Przemyśl');
 
 CREATE OR REPLACE FUNCTION CREATE_CONTACTINFO_IF_NOT_EXISTS(email_ VARCHAR, phonenumber_ VARCHAR(9)) RETURNS int
-	LANGUAGE plpgsql as $$
+    LANGUAGE plpgsql as $$
 DECLARE
-	contactinfo_id int;
-	contactinfo_id_max int;
+    contactinfo_id int;
+    contactinfo_id_max int;
 BEGIN
-	-- Check if contactinfo_id exists
-	SELECT contactinfo.id INTO contactinfo_id
-		FROM contactinfo
-		WHERE contactinfo.email = email_;
-	SELECT MAX(id) INTO contactinfo_id_max FROM contactinfo;
-	-- If not, add it and return it's ID
-	IF (contactinfo_id is null) THEN
-		INSERT INTO contactinfo (id, email, phonenumber)
-			VALUES (contactinfo_id_max, email_, phonenumber_);
-		SELECT contactinfo.id INTO contactinfo_id
-			FROM contactinfo
-			WHERE contactinfo.email = email_;
-	END IF;
+    -- Check if contactinfo_id exists
+    SELECT contactinfo.id INTO contactinfo_id
+        FROM contactinfo
+        WHERE contactinfo.email = email_;
+    -- Select next free id
+    SELECT MAX(id)+1 INTO contactinfo_id_max FROM contactinfo;
+    -- If not, add it and return it's ID
+    IF (contactinfo_id is null) THEN
+        INSERT INTO contactinfo (id, email, phonenumber)
+            VALUES (contactinfo_id_max, email_, phonenumber_);
+        SELECT contactinfo.id INTO contactinfo_id
+            FROM contactinfo
+            WHERE contactinfo.email = email_;
+    END IF;
 
-	RETURN contactinfo_id;
+    RETURN contactinfo_id;
 END;$$;
 -- SELECT * FROM CREATE_CONTACTINFO_IF_NOT_EXISTS('piotr.krawiec23@gmail.com', '111222333');
 
-
-
-CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT(restaurantname VARCHAR,
-														  email VARCHAR,
-														  phonenumber VARCHAR(9),
-														  address VARCHAR,
-														  street VARCHAR,
-														  postalcode VARCHAR(5),
-														  cityname VARCHAR
-	LANGUAGE plpgsql as $$
+CREATE OR REPLACE FUNCTION CREATE_ADDRESS_IF_NOT_EXISTS(city_ VARCHAR, address_ VARCHAR, street_ VARCHAR, postalcode_ VARCHAR(5))   RETURNS int
+    LANGUAGE plpgsql as $$
+DECLARE
+    address_id int;
+    city_id int;
+    address_id_max int;
 BEGIN
+    -- Check if address_id exists
+    SELECT address.id INTO address_id
+        FROM address
+        WHERE address.postalcode = postalcode_
+            AND address.street = street_
+            AND address.postalcode = postalcode_;
+    -- Select next free id
+    SELECT MAX(id)+1 INTO address_id_max FROM address;
+    -- If not, add it and return it's ID
+    IF (address_id is null) THEN
+        SELECT CREATE_CITY_IF_NOT_EXISTS(city_) INTO city_id;
+        INSERT INTO address (id, cityid, address, street, postalcode)
+            VALUES (address_id_max, city_id, address_, street_, postalcode_);
+        SELECT address.id INTO address_id
+            FROM address
+            WHERE address.postalcode = postalcode_
+                AND address.street = street_
+                AND address.postalcode = postalcode_;
+    END IF;
+
+    RETURN address_id;
 END;$$;
+-- SELECT * FROM CREATE_ADDRESS_IF_NOT_EXISTS('Przemyśl', '18A', 'Grunwaldzka', '37723');
