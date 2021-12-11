@@ -21,5 +21,16 @@ BEGIN
             INNER JOIN dishes ON dishes.id = dishesinorder.dishid
         WHERE
             orders.restaurantid = restaurant_id
-            AND orders.enddate is null;
+            AND orders.enddate is null
+            AND orders.readyfordelivery is false;
 END; $$;
+-- select * FROM RESTAURANT_LIST_ORDERS('PizzaHut');
+
+CREATE OR REPLACE PROCEDURE RESTAURANT_MAKE_ORDER_READY(orderid int)
+    LANGUAGE plpgsql as $$
+BEGIN
+    UPDATE orders
+        SET readyfordelivery = true
+        WHERE orders.id = orderid;
+END;$$;
+-- CALL RESTAURANTS_MAKE_ORDER_READY(9);
