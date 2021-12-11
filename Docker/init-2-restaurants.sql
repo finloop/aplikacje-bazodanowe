@@ -111,3 +111,36 @@ BEGIN
     RETURN address_id;
 END;$$;
 -- SELECT * FROM CREATE_ADDRESS_IF_NOT_EXISTS('Przemyśl', '18A', 'Grunwaldzka', '37723');
+
+CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS(restaurantname_ VARCHAR,
+                                                          email_ VARCHAR,
+                                                          phonenumber_ VARCHAR(9),
+                                                          address_ VARCHAR,
+                                                          street_ VARCHAR,
+                                                          postalcode_ VARCHAR(5),
+                                                          cityname_ VARCHAR)
+    LANGUAGE plpgsql as $$
+DECLARE
+    restaurant_id int;
+    restaurant_max_id int;
+    contactinfo_id int;
+    address_id int;
+BEGIN
+     -- Check if restaurant exists
+    SELECT restaurants.id INTO restaurant_id
+        FROM restaurants
+        WHERE restaurants.name = restaurantname_;
+    -- Select next free id
+    SELECT MAX(restaurants.id)+1 INTO restaurant_max_id FROM restaurants;
+    -- Create restaurant if not exists
+    IF (restaurant_id is null) THEN
+        -- Create address and contactinfo
+        SELECT CREATE_CONTACTINFO_IF_NOT_EXISTS(email_, phonenumber_) INTO contactinfo_id;
+        SELECT CREATE_ADDRESS_IF_NOT_EXISTS(cityname_, address_, street_, postalcode_) INTO address_id;
+        -- Insert new restaurant
+        INSERT INTO restaurants(id, contactinfoid, name, addressid)
+            VALUES (restaurant_max_id, contactinfo_id, restaurantname_, address_id);
+
+    END IF;
+END;$$;
+-- CALL RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS('Woda i mąka', 'wodaimaka@gmail.com', '123456111', '12A', 'Popiełuszki', '38000', 'Rzeszów');
