@@ -433,3 +433,5 @@ REFERENCES app.Orders (Id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
+
+ALTER USER postgres SET search_path = app, public;
