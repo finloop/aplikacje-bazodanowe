@@ -34,3 +34,24 @@ BEGIN
         WHERE orders.id = orderid;
 END;$$;
 -- CALL RESTAURANTS_MAKE_ORDER_READY(9);
+
+CREATE OR REPLACE FUNCTION CREATE_CITY_IF_NOT_EXISTS(cityname VARCHAR) RETURNS int
+    LANGUAGE plpgsql as $$
+DECLARE
+    city_id int;
+BEGIN
+    -- Check if city exists
+    SELECT cities.id INTO city_id
+        FROM cities
+        WHERE cities.name = cityname;
+    -- If not, add it and return it's ID
+    IF (city_id is null) THEN
+        INSERT INTO cities (name) VALUES (cityname);
+        SELECT cities.id INTO city_id
+            FROM cities
+            WHERE cities.name = cityname;
+    END IF;
+
+    RETURN city_id;
+END;$$;
+-- SELECT * FROM  CREATE_CITY_IF_NOT_EXISTS('Przemyśl');
