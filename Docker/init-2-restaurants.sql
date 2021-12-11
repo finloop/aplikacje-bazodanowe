@@ -94,18 +94,14 @@ BEGIN
         WHERE address.postalcode = postalcode_
             AND address.street = street_
             AND address.postalcode = postalcode_;
-    -- Select next free id
-    SELECT MAX(id)+1 INTO address_id_max FROM address;
-    -- If not, add it and return it's ID
+   -- If not, add it and return it's ID
     IF (address_id is null) THEN
+        -- Select next free id
+        SELECT MAX(id)+1 INTO address_id FROM address;
+        -- Add city
         SELECT CREATE_CITY_IF_NOT_EXISTS(city_) INTO city_id;
         INSERT INTO address (id, cityid, address, street, postalcode)
-            VALUES (address_id_max, city_id, address_, street_, postalcode_);
-        SELECT address.id INTO address_id
-            FROM address
-            WHERE address.postalcode = postalcode_
-                AND address.street = street_
-                AND address.postalcode = postalcode_;
+            VALUES (address_id, city_id, address_, street_, postalcode_);
     END IF;
 
     RETURN address_id;
@@ -163,3 +159,28 @@ END;$$;
 --                                                     ARRAY['Naleśniki', '12', '15'],
 --                                                     ARRAY['Panini', '10', '15']
 --                                                 ]);
+
+
+CREATE OR REPLACE PROCEDURE RESTAURANTS_ADD_CUISNE_TO_RESTAURANT(restaurantname_ VARCHAR,
+                                                                 cuisne_ VARCHAR)
+    LANGUAGE plpgsql as $$
+DECLARE
+    restaurant_id int;
+    cuisne_id int;
+BEGIN
+    -- Check if restaurant exists
+    SELECT cuisnes.id INTO cuisne_id
+        FROM cuisnes
+        WHERE cuisnes.name = cuisne_;
+    SELECT restaurants.id INTO restaurant_id
+        FROM restaurants
+        WHERE restaurants.name = restaurantname_;
+    IF cuisne_id is null THEN
+        SELECT MAX(id)+1 INTO cuisne_id FROM cuisnes;
+        INSERT INTO cuisnes (id, name)
+            VALUES (cuisne_id, cuisne_);
+    END IF;
+    INSERT INTO cuisnesinrestaurants (cuisneid, restaurantid)
+        VALUES (cuisne_id, restaurant_id);
+END;$$;
+-- CALL RESTAURANTS_ADD_CUISNE_TO_RESTAURANT('Woda i mąka', 'Polska');
