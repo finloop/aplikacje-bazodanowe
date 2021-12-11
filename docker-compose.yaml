@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: postgres
     image:  postgres:14.0-alpine
     restart: unless-stopped
     environment:
@@ -10,11 +11,15 @@ services:
     ports:
       - 5432:5432
 
-  adminer:
-    image: adminer
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
     restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_EMAIL
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_PASSWORD
     ports:
-      - 8080:8080
+     - 80:80
 
 volumes:
   data-volume:
