@@ -55,3 +55,40 @@ BEGIN
     RETURN city_id;
 END;$$;
 -- SELECT * FROM  CREATE_CITY_IF_NOT_EXISTS('Przemyśl');
+
+CREATE OR REPLACE FUNCTION CREATE_CONTACTINFO_IF_NOT_EXISTS(email_ VARCHAR, phonenumber_ VARCHAR(9)) RETURNS int
+	LANGUAGE plpgsql as $$
+DECLARE
+	contactinfo_id int;
+	contactinfo_id_max int;
+BEGIN
+	-- Check if contactinfo_id exists
+	SELECT contactinfo.id INTO contactinfo_id
+		FROM contactinfo
+		WHERE contactinfo.email = email_;
+	SELECT MAX(id) INTO contactinfo_id_max FROM contactinfo;
+	-- If not, add it and return it's ID
+	IF (contactinfo_id is null) THEN
+		INSERT INTO contactinfo (id, email, phonenumber)
+			VALUES (contactinfo_id_max, email_, phonenumber_);
+		SELECT contactinfo.id INTO contactinfo_id
+			FROM contactinfo
+			WHERE contactinfo.email = email_;
+	END IF;
+
+	RETURN contactinfo_id;
+END;$$;
+-- SELECT * FROM CREATE_CONTACTINFO_IF_NOT_EXISTS('piotr.krawiec23@gmail.com', '111222333');
+
+
+
+CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT(restaurantname VARCHAR,
+														  email VARCHAR,
+														  phonenumber VARCHAR(9),
+														  address VARCHAR,
+														  street VARCHAR,
+														  postalcode VARCHAR(5),
+														  cityname VARCHAR
+	LANGUAGE plpgsql as $$
+BEGIN
+END;$$;
