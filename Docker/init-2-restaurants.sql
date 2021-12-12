@@ -46,10 +46,8 @@ BEGIN
         WHERE cities.name = cityname;
     -- If not, add it and return it's ID
     IF (city_id is null) THEN
-        INSERT INTO cities (name) VALUES (cityname);
-        SELECT cities.id INTO city_id
-            FROM cities
-            WHERE cities.name = cityname;
+        SELECT MAX(id)+1 INTO city_id FROM cities;
+        INSERT INTO cities (id, name) VALUES (city_id, cityname);
     END IF;
 
     RETURN city_id;
@@ -60,21 +58,17 @@ CREATE OR REPLACE FUNCTION CREATE_CONTACTINFO_IF_NOT_EXISTS(email_ VARCHAR, phon
     LANGUAGE plpgsql as $$
 DECLARE
     contactinfo_id int;
-    contactinfo_id_max int;
 BEGIN
     -- Check if contactinfo_id exists
     SELECT contactinfo.id INTO contactinfo_id
         FROM contactinfo
         WHERE contactinfo.email = email_;
-    -- Select next free id
-    SELECT MAX(id)+1 INTO contactinfo_id_max FROM contactinfo;
     -- If not, add it and return it's ID
     IF (contactinfo_id is null) THEN
+        -- Select next free id
+        SELECT MAX(id)+1 INTO contactinfo_id FROM contactinfo;
         INSERT INTO contactinfo (id, email, phonenumber)
-            VALUES (contactinfo_id_max, email_, phonenumber_);
-        SELECT contactinfo.id INTO contactinfo_id
-            FROM contactinfo
-            WHERE contactinfo.email = email_;
+            VALUES (contactinfo_id, email_, phonenumber_);
     END IF;
 
     RETURN contactinfo_id;
@@ -86,7 +80,6 @@ CREATE OR REPLACE FUNCTION CREATE_ADDRESS_IF_NOT_EXISTS(city_ VARCHAR, address_ 
 DECLARE
     address_id int;
     city_id int;
-    address_id_max int;
 BEGIN
     -- Check if address_id exists
     SELECT address.id INTO address_id
@@ -94,7 +87,7 @@ BEGIN
         WHERE address.postalcode = postalcode_
             AND address.street = street_
             AND address.postalcode = postalcode_;
-   -- If not, add it and return it's ID
+    -- If not, add it and return it's ID
     IF (address_id is null) THEN
         -- Select next free id
         SELECT MAX(id)+1 INTO address_id FROM address;
@@ -119,7 +112,6 @@ CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS(restaura
     LANGUAGE plpgsql as $$
 DECLARE
     restaurant_id int;
-    restaurant_max_id int;
     contactinfo_id int;
     address_id int;
     dish_id int;
@@ -129,22 +121,22 @@ BEGIN
     SELECT restaurants.id INTO restaurant_id
         FROM restaurants
         WHERE restaurants.name = restaurantname_;
-    -- Select next free id
-    SELECT MAX(restaurants.id)+1 INTO restaurant_max_id FROM restaurants;
     -- Create restaurant if not exists
     IF (restaurant_id is null) THEN
+        -- Select next free id
+        SELECT MAX(restaurants.id)+1 INTO restaurant_id FROM restaurants;
         -- Create address and contactinfo
         SELECT CREATE_CONTACTINFO_IF_NOT_EXISTS(email_, phonenumber_) INTO contactinfo_id;
         SELECT CREATE_ADDRESS_IF_NOT_EXISTS(cityname_, address_, street_, postalcode_) INTO address_id;
         -- Insert new restaurant
         INSERT INTO restaurants(id, contactinfoid, name, addressid)
-            VALUES (restaurant_max_id, contactinfo_id, restaurantname_, address_id);
+            VALUES (restaurant_id, contactinfo_id, restaurantname_, address_id);
         -- Add dishes to new restaurant
         FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
             SELECT MAX(id)+1 INTO dish_id FROM dishes;
             INSERT INTO dishes
                        (id, name, price, waittime, restaurantid)
-                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int), CAST(dish_[3] AS int), restaurant_max_id);
+                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int), CAST(dish_[3] AS int), restaurant_id);
         END LOOP;
 
     END IF;
