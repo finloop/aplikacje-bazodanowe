@@ -3,7 +3,7 @@ CREATE SCHEMA app;
 CREATE SEQUENCE app.contactinfo_id_seq;
 
 CREATE TABLE app.ContactInfo (
-                Id VARCHAR NOT NULL DEFAULT nextval('app.contactinfo_id_seq'),
+                Id INTEGER NOT NULL DEFAULT nextval('app.contactinfo_id_seq'),
                 Email VARCHAR(50),
                 PhoneNumber VARCHAR(9) NOT NULL,
                 CONSTRAINT contactinfo_pk PRIMARY KEY (Id)
@@ -57,7 +57,7 @@ CREATE TABLE app.Address (
 
 CREATE TABLE app.Restaurants (
                 Id INTEGER NOT NULL,
-                ContactInfoId VARCHAR NOT NULL,
+                ContactInfoId INTEGER  NOT NULL,
                 Name VARCHAR(50) NOT NULL,
                 AddressId INTEGER NOT NULL,
                 CONSTRAINT restaurantsid PRIMARY KEY (Id)
@@ -83,7 +83,7 @@ CREATE TABLE app.CuisnesInRestaurants (
 
 CREATE TABLE app.Employees (
                 Id INTEGER NOT NULL,
-                ContactInfoId VARCHAR NOT NULL,
+                ContactInfoId INTEGER NOT NULL,
                 FName VARCHAR NOT NULL,
                 LName VARCHAR NOT NULL,
                 AddressId INTEGER NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE app.Employees (
 
 CREATE TABLE app.Clients (
                 Id INTEGER NOT NULL,
-                ContactInfoId VARCHAR NOT NULL,
+                ContactInfoId INTEGER NOT NULL,
                 Name VARCHAR(50) NOT NULL,
                 AddressId INTEGER NOT NULL,
                 CONSTRAINT clientid PRIMARY KEY (Id)
@@ -433,3 +433,5 @@ REFERENCES app.Orders (Id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
+
+ALTER USER postgres SET search_path = app, public;
