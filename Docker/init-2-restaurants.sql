@@ -102,13 +102,13 @@ END;$$;
 -- SELECT * FROM CREATE_ADDRESS_IF_NOT_EXISTS('Przemyśl', '18A', 'Grunwaldzka', '37723');
 
 CREATE OR REPLACE PROCEDURE RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS(restaurantname_ VARCHAR,
-                                                          email_ VARCHAR,
-                                                          phonenumber_ VARCHAR(9),
-                                                          address_ VARCHAR,
-                                                          street_ VARCHAR,
-                                                          postalcode_ VARCHAR(5),
-                                                          cityname_ VARCHAR,
-                                                          dishes_ VARCHAR[][])
+                                                                        email_ VARCHAR,
+                                                                        phonenumber_ VARCHAR(9),
+                                                                        address_ VARCHAR,
+                                                                        street_ VARCHAR,
+                                                                        postalcode_ VARCHAR(5),
+                                                                        cityname_ VARCHAR,
+                                                                        dishes_ VARCHAR[][])
     LANGUAGE plpgsql as $$
 DECLARE
     restaurant_id int;
