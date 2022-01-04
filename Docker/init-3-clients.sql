@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_ADDRESS(client_name varchar(50),
+CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_ADDRESS(client_id int,
 											city_ varchar(50),
 											address_ varchar, 
 											street_ varchar,
@@ -13,15 +13,15 @@ BEGIN
 	
 	UPDATE clients
 		SET addressid = address_id
-		WHERE clients.name=client_name;
+		WHERE clients.id=client_id;
 	
 END;$$;
---CALL CLIENT_CHANGE_ADDRESS('Adrian Szmyd', 'Toruń','21','Gagarina', '59100');
+--CALL CLIENT_CHANGE_ADDRESS(19, 'Toruń','21','Gagarina', '59100');
 
 
 
 
-CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_CONTACTINFO(client_name varchar(50),email_ varchar(50),phonenumber_ varchar(9)
+CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_CONTACTINFO(client_id int,email_ varchar(50),phonenumber_ varchar(9)
 										   )
     LANGUAGE plpgsql as $$
 DECLARE
@@ -32,35 +32,81 @@ BEGIN
 	
 	UPDATE clients
 		SET contactinfoid = contactinfo_id
-		WHERE clients.name=client_name;
+		WHERE clients.id=client_id;
 	
 END;$$;
 
 
---CALL CLIENTS_CHANGE_CONTACTINFO('Adrian Szmyd', 'szad@o2.pl', '131131131');
+--CALL CLIENTS_CHANGE_CONTACTINFO(19, 'szad@o2.pl', '131131131');
 
 
 
 
-CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_NAME(client_name varchar(50),new_client_name varchar(50))
+CREATE OR REPLACE PROCEDURE CLIENTS_CHANGE_NAME(client_id int,new_client_name varchar(50))
     LANGUAGE plpgsql as $$
 
 	
 BEGIN
    	UPDATE clients
 		SET name = new_client_name
-		WHERE clients.name = client_name;
+		WHERE clients.id = client_id;
 	
 END;$$;
 
 
---CALL CLIENTS_CHANGE_NAME('Adrian Szmyd', 'Karol Tetmajer');
+--CALL CLIENTS_CHANGE_NAME(19, 'Karol Tetmajer');
 
 
+CREATE OR REPLACE PROCEDURE CLIENTS_NEW_ORDER(client_id int, dish_id int[], quantity int[],  payment_type varchar(50))
+LANGUAGE plpgsql as $$
 
 
-CREATE OR REPLACE FUNCTION CLIENTS_AVAILABLE_RESTAURANTS(client_name varchar(50))
-    RETURNS TABLE(restaurant_name varchar(50))
+DECLARE
+	
+	ready BOOLEAN := false;
+	order_id int;
+	paymenttype_id int;
+	rest_id int;
+	paid boolean:= false;
+	
+BEGIN
+
+		SELECT MAX(orders.id)+1 
+		INTO order_id 
+		FROM orders;
+
+		SELECT paymenttypesid 
+		INTO paymenttype_id
+		FROM paymenttypes
+			WHERE paymenttypes.name = payment_type;
+			
+		FOR i in 1..array_length(dish_id, 1) LOOP
+			SELECT restaurantid 
+			INTO rest_id
+			FROM dishes 	
+				WHERE dishes.id = dish_id[i];
+		END LOOP;	
+		
+		IF paymenttype_id = 3 OR paymenttype_id = 4 THEN		
+			paid:=true;	
+		END IF;
+
+		INSERT INTO orders(id, paymenttypeid, restaurantid, clientid, paid, startdate, readyfordelivery)
+					VALUES (order_id, paymenttype_id, rest_id, client_id, paid , current_date ,ready);
+				
+		FOR i in 1..array_length(dish_id, 1) LOOP
+		INSERT INTO dishesinorder(dishid, orderid, qty)
+				VALUES(dish_id[i], order_id, quantity[i]);		
+		END LOOP;			
+		
+	
+END;$$;
+
+--CALL CLIENTS_NEW_ORDER(19, array[6,20], array[7,7], 'Karta');
+
+
+CREATE OR REPLACE FUNCTION CLIENTS_AVAILABLE_RESTAURANTS(client_id int)
+    RETURNS TABLE(restaurant_id int, restaurant_name varchar(50))
     LANGUAGE 'plpgsql' AS $$
 
 DECLARE
@@ -71,9 +117,9 @@ BEGIN
 SELECT address.cityid INTO city_id
      FROM address
 	 INNER JOIN clients ON address.id = clients.addressid
-	 WHERE clients.name = client_name;
+	 WHERE clients.id = client_id;
 
-RETURN QUERY SELECT restaurants.name
+RETURN QUERY SELECT restaurants.id, restaurants.name
 FROM cities 
 	INNER JOIN address ON cities.id = address.cityid 
 	INNER JOIN restaurants ON address.id = restaurants.addressid
@@ -83,7 +129,8 @@ WHERE cities.id=city_id;
     
 END;$$;
 
---SELECT * FROM CLIENTS_AVAILABLE_RESTAURANTS('Adrian Szmyd');
+--SELECT * FROM CLIENTS_AVAILABLE_RESTAURANTS(19);
+
 
 
 
@@ -129,20 +176,14 @@ END;$$;
 
 
 
-CREATE OR REPLACE FUNCTION CLIENTS_LIST_ORDERS(client_name varchar(30))
+CREATE OR REPLACE FUNCTION CLIENTS_LIST_ORDERS(client_id int)
     RETURNS
         TABLE (            
-            name varchar(60)            
+            name varchar(60)  
         )
     LANGUAGE plpgsql as $$
-DECLARE
-    client_id int;
-BEGIN
-    SELECT clients.id INTO client_id
-        FROM clients
-        WHERE
-            clients.name = client_name;
 
+BEGIN
     RETURN QUERY SELECT dishes.name
         FROM orders
             INNER JOIN clients ON clients.id = orders.clientid
@@ -154,7 +195,7 @@ BEGIN
             AND orders.readyfordelivery is true;
 END; $$;
 
---SELECT * FROM CLIENTS_LIST_ORDERS('Michał Ptaszyński')
+--SELECT * FROM CLIENTS_LIST_ORDERS(7)
 
 
 
@@ -168,10 +209,11 @@ CREATE OR REPLACE FUNCTION PAYMENT_TYPE_AVG_ORDER_COST()
 
 BEGIN
 
-RETURN QUERY SELECT paymenttypes.name, Avg(dishes.price*dishesinorder.qty)
-FROM dishes INNER JOIN ((paymenttypes INNER JOIN orders ON paymenttypes.paymenttypesid = orders.paymenttypeid) 
-INNER JOIN dishesinorder ON orders.id = dishesinorder.orderid) ON dishes.id = dishesinorder.dishid
-GROUP BY paymenttypes.name;
+	RETURN QUERY SELECT paymenttypes.name, Avg(dishes.price*dishesinorder.qty)
+		FROM dishes 
+		INNER JOIN ((paymenttypes INNER JOIN orders ON paymenttypes.paymenttypesid = orders.paymenttypeid) 
+		INNER JOIN dishesinorder ON orders.id = dishesinorder.orderid) ON dishes.id = dishesinorder.dishid
+		GROUP BY paymenttypes.name;
 
 END;$$;
 
@@ -179,7 +221,30 @@ END;$$;
 
 
 
+CREATE OR REPLACE FUNCTION CLIENTS_AVAILABLE_DISHES(client_id int)
+RETURNS
+        TABLE (
+			dish_id int,
+            dish_name varchar(50)            
+        )
+LANGUAGE plpgsql as $$
+
+DECLARE
+	restaurant_id int;
+	
+BEGIN
+	SELECT *
+	FROM CLIENTS_AVAILABLE_RESTAURANTS(client_id) 
+	INTO restaurant_id;
+
+
+	RETURN QUERY SELECT dishes.id, dishes.name
+	FROM dishes 
+	INNER JOIN restaurants ON dishes.restaurantid = restaurants.id
+	WHERE restaurants.id=restaurant_id;
 
 
 
+END;$$;
 
+--SELECT * FROM CLIENTS_AVAILABLE_DISHES(19);
