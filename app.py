@@ -21,3 +21,7 @@ app = Flask(__name__)
 @app.route('/status')
 def status():
     return "I'm alive!!!"
+
+@app.route('/restaurants')
+def restaurants():
+    return render_template("restaurants.html")
