@@ -169,3 +169,25 @@ BEGIN
         VALUES (cuisne_id, restaurant_id);
 END;$$;
 -- CALL RESTAURANTS_ADD_CUISNE_TO_RESTAURANT('Woda i mąka', 'Polska');
+
+CREATE TYPE RESTAURANT_TYPE AS (
+    name VARCHAR(50),
+    email VARCHAR(50),
+    phonenumber VARCHAR(9),
+    address VARCHAR,
+    street VARCHAR,
+    postalcode VARCHAR,
+    city VARCHAR(50)
+);
+
+CREATE OR REPLACE FUNCTION RESTAURANT_INFO(restaurant_id int)
+    RETURNS RESTAURANT_TYPE AS
+$$
+SELECT r.name, ci.email, ci.phonenumber, addr.address, addr.street, addr.postalcode, cit.name
+        FROM RESTAURANTS AS r
+        INNER JOIN CONTACTINFO AS ci ON r.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON r.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id
+        WHERE r.id = restaurant_id;
+$$ LANGUAGE SQL;
+-- SELECT * FROM RESTAURANT_INFO(5);
