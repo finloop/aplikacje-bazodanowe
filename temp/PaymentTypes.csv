@@ -1,0 +1,5 @@
+"PaymentTypeId","Nazwa"
+"1","Karta"
+"2","Gotówka"
+"3","Przelew"
+"4","Prepaid"

@@ -1,0 +1,6 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","2","2","0"
+"DishName","STRING","23","0","0"
+"RestaurantId","INTEGER","2","2","0"
+"Price","INTEGER","2","2","0"
+"WaitTime","INTEGER","2","2","0"

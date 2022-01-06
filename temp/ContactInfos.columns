@@ -1,0 +1,4 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","2","2","0"
+"Email","STRING","23","0","0"
+"PhoneNumber","INTEGER","9","9","0"

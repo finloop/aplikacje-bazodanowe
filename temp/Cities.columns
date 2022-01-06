@@ -1,0 +1,3 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","2","2","0"
+"CityName","STRING","9","0","0"

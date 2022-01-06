@@ -1,0 +1,4 @@
+"name","type","length","leftDigits","rightDigits"
+"DishId","INTEGER","2","2","0"
+"OrderId","INTEGER","2","2","0"
+"Qty","INTEGER","1","1","0"

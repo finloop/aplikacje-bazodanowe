@@ -1,0 +1,5 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","2","2","0"
+"ContactinfoId","INTEGER","2","2","0"
+"ClientName","STRING","18","0","0"
+"AddressId","INTEGER","2","2","0"

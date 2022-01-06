@@ -1,0 +1,3 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","1","1","0"
+"CuisineName","STRING","11","0","0"

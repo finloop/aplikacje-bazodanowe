@@ -1,0 +1,6 @@
+"name","type","length","leftDigits","rightDigits"
+"Id","INTEGER","2","2","0"
+"CityId","INTEGER","2","2","0"
+"Address","INTEGER","3","3","0"
+"Street","STRING","13","0","0"
+"PostalCode","INTEGER","5","5","0"
