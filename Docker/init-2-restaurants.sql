@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_name varchar(30))
+CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_id int)
     RETURNS
         TABLE (
             id int,
@@ -6,14 +6,7 @@ CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_name varchar(30))
             qty smallint
         )
     LANGUAGE plpgsql as $$
-DECLARE
-    restaurant_id int;
 BEGIN
-    SELECT restaurants.id INTO restaurant_id
-        FROM restaurants
-        WHERE
-            restaurants.name = restaurant_name;
-
     RETURN QUERY SELECT orders.id, dishes.name, dishesinorder.qty
         FROM orders
             INNER JOIN restaurants ON restaurants.id = orders.restaurantid
@@ -24,7 +17,7 @@ BEGIN
             AND orders.enddate is null
             AND orders.readyfordelivery is false;
 END; $$;
--- select * FROM RESTAURANT_LIST_ORDERS('PizzaHut');
+-- select * FROM RESTAURANT_LIST_ORDERS(5);
 
 CREATE OR REPLACE PROCEDURE RESTAURANT_MAKE_ORDER_READY(orderid int)
     LANGUAGE plpgsql as $$
