@@ -1,0 +1,26 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light ms-2 mt-2 me-2" style="width: 100%;">
+    <p class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <span class="fs-4">Zamówienia</span>
+    </>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      {% if orders|length > 0 %}
+        {% for order_id, dishes in orders.items() %}
+        <!-- Order template -->
+        <li>
+          <div class="container-fluid bg-white p-3 rounded border">
+            <p class="fs-4">Zamówienie numer {{order_id}} <button type="button" class="btn btn-primary ms-4">Oznacz jako do odebrania</button> </p>
+            <ul class="list-group">
+              {% for dish in dishes %}
+                <li class="list-group-item">{{dish[0]}} <p class="bg-info text-white d-inline p-1 rounded ms-2">{{dish[1]}}</p></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </li>
+        {% endfor %}
+      {% else %}
+      Brak zamówień w tym momencie 🐸
+      {% endif %}
+    </ul>
+    <hr>
+</div>
