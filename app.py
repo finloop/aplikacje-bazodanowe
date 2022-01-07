@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 
 load_dotenv()  # Load .env file
 
@@ -62,3 +62,35 @@ def restaurant_orders(restaurant_id: int):
                            orders=orders,
                            restaurant=restaurant,
                            restaurant_id=restaurant_id)
+
+@app.route('/addrestaurant')
+def addrestaurant():
+    restaurantname = request.args.get('restaurantname')
+    email = request.args.get('email')
+    phonenumber = request.args.get('phonenumber')
+    address = request.args.get('address')
+    street = request.args.get('street')
+    postalcode = request.args.get('postalcode')
+    city = request.args.get('city')
+
+    dishnames = list(map(lambda y: request.args.get(y),
+                filter(lambda x: 'dishname' in x and request.args.get(x) is not '', dict(request.args))))
+
+    dishprice = list(map(lambda y: request.args.get(y),
+                filter(lambda x: 'dishprice' in x and request.args.get(x) is not '', dict(request.args))))
+
+    dishwait = list(map(lambda y: request.args.get(y),
+                filter(lambda x: 'dishwait' in x and request.args.get(x) is not '', dict(request.args))))
+
+    dishes = [f"ARRAY{[dishnames[i], dishprice[i], dishwait[i]]}" for i in range(len(dishnames))]
+
+    dishes = f"ARRAY{dishes}".replace("\"", "")
+
+    cursor = conn.cursor()
+    query = f"CALL RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS('{restaurantname}','{email}','{phonenumber}','{address}','{street}','{postalcode}','{city}',{dishes})"
+    try:
+        cursor.execute(query)
+        conn.commit()
+    except:
+        cursor.close()
+    return render_template("restaurants-create.html")
