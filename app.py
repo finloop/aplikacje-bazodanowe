@@ -21,8 +21,8 @@ app = Flask(__name__)
 def status():
     return "I'm alive!!!"
 
-@app.route('/restaurants/<order_id>')
-def restaurant_orders(order_id: int):
+@app.route('/restaurants/<restaurant_id>')
+def restaurant_orders(restaurant_id: int):
     """
     Handle restaurant orders
 
@@ -41,7 +41,7 @@ def restaurant_orders(order_id: int):
         cursor.execute(f"CALL RESTAURANT_MAKE_ORDER_READY({finishorder})")
 
     # List of dishes to finish (order_id, dish_name, qty)
-    cursor.execute(f"SELECT * FROM RESTAURANT_LIST_ORDERS({order_id})")
+    cursor.execute(f"SELECT * FROM RESTAURANT_LIST_ORDERS({restaurant_id})")
     results = cursor.fetchall()
     for dish in results:
         if dish[0] not in orders.keys():
@@ -50,13 +50,15 @@ def restaurant_orders(order_id: int):
             orders[dish[0]] += [(dish[1], dish[2])]
 
     # Get restaurant info
-    cursor.execute(f"SELECT * FROM RESTAURANT_INFO({order_id})")
+    cursor.execute(f"SELECT * FROM RESTAURANT_INFO({restaurant_id})")
     results = cursor.fetchone()
     for i, desc in enumerate(cursor.description):
         restaurant[desc[0]] = results[i]
 
+    conn.commit()
     cursor.close()
 
     return render_template("restaurants.html",
                            orders=orders,
-                           restaurant=restaurant)
+                           restaurant=restaurant,
+                           restaurant_id=restaurant_id)
