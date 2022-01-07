@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 
 load_dotenv()  # Load .env file
 
@@ -91,7 +91,11 @@ def addrestaurant():
     try:
         cursor.execute(query)
         conn.commit()
+        cursor.execute(f"SELECT id FROM RESTAURANTS WHERE name = '{restaurantname}'")
+        restaurantid = cursor.fetchone()[0]
+        return redirect(url_for(f"restaurant_orders", restaurant_id=restaurantid))
     except Exception as e:
+        print(e)
         cursor.close()
         conn.rollback()
     return render_template("restaurants-create.html")
