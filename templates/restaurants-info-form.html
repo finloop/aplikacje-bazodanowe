@@ -1,0 +1,42 @@
+<form id="contactForm">
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 280px;">
+<div class="form-floating mb-3">
+      <input class="form-control" id="nazwaRestauracji" type="text" placeholder="Nazwa restauracji" data-sb-validations="required" />
+      <label for="nazwaRestauracji">Nazwa restauracji</label>
+      <div class="invalid-feedback" data-sb-feedback="nazwaRestauracji:required">Nazwa restauracji is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input class="form-control" id="adresEmail" type="email" placeholder="Adres email" data-sb-validations="email,required" />
+      <label for="adresEmail">Adres email</label>
+      <div class="invalid-feedback" data-sb-feedback="adresEmail:required">Adres email is required.</div>
+      <div class="invalid-feedback" data-sb-feedback="adresEmail:email">Adres email Email is not valid.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input class="form-control" id="numerTelefonu" type="text" placeholder="Numer telefonu" data-sb-validations="required" />
+      <label for="numerTelefonu">Numer telefonu</label>
+      <div class="invalid-feedback" data-sb-feedback="numerTelefonu:required">Numer telefonu is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input class="form-control" id="numerBudynku" type="text" placeholder="Numer budynku" data-sb-validations="required" />
+      <label for="numerBudynku">Numer budynku</label>
+      <div class="invalid-feedback" data-sb-feedback="numerBudynku:required">Numer budynku is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input class="form-control" id="ulica" type="text" placeholder="Ulica" data-sb-validations="required" />
+      <label for="ulica">Ulica</label>
+      <div class="invalid-feedback" data-sb-feedback="ulica:required">Ulica is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input class="form-control" id="kodPocztowy" type="text" placeholder="Kod pocztowy" data-sb-validations="required" />
+      <label for="kodPocztowy">Kod pocztowy</label>
+      <div class="invalid-feedback" data-sb-feedback="kodPocztowy:required">Kod pocztowy is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input name="miasto" class="form-control" id="miasto" type="text" placeholder="Miasto" data-sb-validations="required" />
+      <label for="miasto">Miasto</label>
+      <div class="invalid-feedback" data-sb-feedback="miasto:required">Miasto is required.</div>
+  </div>
+  <div class="d-grid">
+      <button name="submit" class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+  </div>
+</div>
