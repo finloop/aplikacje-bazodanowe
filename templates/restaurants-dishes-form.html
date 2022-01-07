@@ -1,23 +1,20 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 500px;">
+{% macro dish(number) -%}
   <div class="flex-row m-2 p-3 border rounded">
-    <h2>Danie nr 1</h2>
-    <div class="form-floating mb-3">
-      <input class="form-control" id="nazwaDania" type="email" placeholder="Nazwa dania" data-sb-validations="required,email" />
+    <h2>Danie nr {{number}}</h2>
+  <div class="form-floating mb-3">
+      <input name="dishname-{{number}}" class="form-control" id="nazwaDania" type="text" placeholder="Nazwa dania" data-sb-validations="required" />
       <label for="nazwaDania">Nazwa dania</label>
       <div class="invalid-feedback" data-sb-feedback="nazwaDania:required">Nazwa dania is required.</div>
-      <div class="invalid-feedback" data-sb-feedback="nazwaDania:email">Nazwa dania Email is not valid.</div>
   </div>
   <div class="form-floating mb-3">
-      <input class="form-control" id="cena" type="text" placeholder="Cena" data-sb-validations="required" />
+      <input name="dishprice-{{number}}" class="form-control" id="cena" type="text" placeholder="Cena" data-sb-validations="required" />
       <label for="cena">Cena</label>
       <div class="invalid-feedback" data-sb-feedback="cena:required">Cena is required.</div>
   </div>
   <div class="form-floating mb-3">
-      <input class="form-control" id="czasOczekiwania" type="text" placeholder="Czas oczekiwania" data-sb-validations="required" />
+      <input name="dishwait-{{number}}" class="form-control" id="czasOczekiwania" type="text" placeholder="Czas oczekiwania" data-sb-validations="required" />
       <label for="czasOczekiwania">Czas oczekiwania</label>
       <div class="invalid-feedback" data-sb-feedback="czasOczekiwania:required">Czas oczekiwania is required.</div>
   </div>
-      </div>
-  </div>
-  </div>
 </div>
+{%- endmacro %}

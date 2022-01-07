@@ -1,9 +1,13 @@
+{% from "restaurants-dishes-form.html" import dish %}
+
 {% include "restaurants-navbar.html" %}
 <main style="display: flex">
    <div class="container px-5 my-5">
       <form id="contactForm" style="display: flex">
         {% include "restaurants-info-form.html" %}
-        {% include "restaurants-dishes-form.html" %}
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 500px;">
+        {{ dish(1) }}
+        </div>
       </form>
   </div>
 </main>
