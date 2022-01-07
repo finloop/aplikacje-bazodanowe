@@ -91,6 +91,7 @@ def addrestaurant():
     try:
         cursor.execute(query)
         conn.commit()
-    except:
+    except Exception as e:
         cursor.close()
+        conn.rollback()
     return render_template("restaurants-create.html")
