@@ -3,6 +3,11 @@
 {% include "restaurants-navbar.html" %}
 <main style="display: flex">
    <div class="container px-5 my-5 border rounded bg-light pt-3">
+     {% if warning %}
+     <div class="alert alert-warning" role="alert">
+       Błąd w formularzu.
+     </div>
+     {% endif %}
      <h1>Dodawanie restauracji</h1>
       <form id="contactForm" style="display: flex">
         {% include "restaurants-info-form.html" %}

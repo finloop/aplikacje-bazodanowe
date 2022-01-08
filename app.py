@@ -88,14 +88,16 @@ def addrestaurant():
 
     cursor = conn.cursor()
     query = f"CALL RESTAURANTS_CREATE_RESTAURANT_IF_NOT_EXISTS('{restaurantname}','{email}','{phonenumber}','{address}','{street}','{postalcode}','{city}',{dishes})"
-    try:
-        cursor.execute(query)
-        conn.commit()
-        cursor.execute(f"SELECT id FROM RESTAURANTS WHERE name = '{restaurantname}'")
-        restaurantid = cursor.fetchone()[0]
-        return redirect(url_for(f"restaurant_orders", restaurant_id=restaurantid))
-    except Exception as e:
-        print(e)
-        cursor.close()
-        conn.rollback()
+    if restaurantname is not None:
+        try:
+            cursor.execute(query)
+            conn.commit()
+            cursor.execute(f"SELECT id FROM RESTAURANTS WHERE name = '{restaurantname}'")
+            restaurantid = cursor.fetchone()[0]
+            return redirect(url_for(f"restaurant_orders", restaurant_id=restaurantid))
+        except Exception as e:
+            print(e)
+            cursor.close()
+            conn.rollback()
+            return render_template("restaurants-create.html", warning=True)
     return render_template("restaurants-create.html")
