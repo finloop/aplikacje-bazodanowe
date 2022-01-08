@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_name varchar(30))
+CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_id int)
     RETURNS
         TABLE (
             id int,
@@ -6,14 +6,7 @@ CREATE OR REPLACE FUNCTION RESTAURANT_LIST_ORDERS(restaurant_name varchar(30))
             qty smallint
         )
     LANGUAGE plpgsql as $$
-DECLARE
-    restaurant_id int;
 BEGIN
-    SELECT restaurants.id INTO restaurant_id
-        FROM restaurants
-        WHERE
-            restaurants.name = restaurant_name;
-
     RETURN QUERY SELECT orders.id, dishes.name, dishesinorder.qty
         FROM orders
             INNER JOIN restaurants ON restaurants.id = orders.restaurantid
@@ -24,7 +17,7 @@ BEGIN
             AND orders.enddate is null
             AND orders.readyfordelivery is false;
 END; $$;
--- select * FROM RESTAURANT_LIST_ORDERS('PizzaHut');
+-- select * FROM RESTAURANT_LIST_ORDERS(5);
 
 CREATE OR REPLACE PROCEDURE RESTAURANT_MAKE_ORDER_READY(orderid int)
     LANGUAGE plpgsql as $$
@@ -176,3 +169,25 @@ BEGIN
         VALUES (cuisne_id, restaurant_id);
 END;$$;
 -- CALL RESTAURANTS_ADD_CUISNE_TO_RESTAURANT('Woda i mąka', 'Polska');
+
+CREATE TYPE RESTAURANT_TYPE AS (
+    name VARCHAR(50),
+    email VARCHAR(50),
+    phonenumber VARCHAR(9),
+    address VARCHAR,
+    street VARCHAR,
+    postalcode VARCHAR,
+    city VARCHAR(50)
+);
+
+CREATE OR REPLACE FUNCTION RESTAURANT_INFO(restaurant_id int)
+    RETURNS RESTAURANT_TYPE AS
+$$
+SELECT r.name, ci.email, ci.phonenumber, addr.address, addr.street, addr.postalcode, cit.name
+        FROM RESTAURANTS AS r
+        INNER JOIN CONTACTINFO AS ci ON r.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON r.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id
+        WHERE r.id = restaurant_id;
+$$ LANGUAGE SQL;
+-- SELECT * FROM RESTAURANT_INFO(5);

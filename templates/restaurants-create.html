@@ -1,0 +1,25 @@
+{% from "restaurants-dishes-form.html" import dish %}
+
+{% include "restaurants-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     {% if warning %}
+     <div class="alert alert-warning" role="alert">
+       Błąd w formularzu.
+     </div>
+     {% endif %}
+     <h1>Dodawanie restauracji</h1>
+      <form id="contactForm" style="display: flex">
+        {% include "restaurants-info-form.html" %}
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
+        {{ dish(1) }}
+        {{ dish(2) }}
+        {{ dish(3) }}
+        {{ dish(4) }}
+        {{ dish(5) }}
+        {{ dish(6) }}
+        </div>
+      </form>
+  </div>
+</main>
+{% include "restaurants-footer.html" %}

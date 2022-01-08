@@ -1,0 +1,34 @@
+{% include "restaurants-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     <table class="table">
+       <thead class="thead-dark">
+         <th scope="col">Id</th>
+         <th scope="col">Nazwa restauracji</th>
+         <th scope="col">Email</th>
+         <th scope="col">Numer telefonu</th>
+         <th scope="col">Adres</th>
+         <th scope="col">Kod pocztowy</th>
+         <th scope="col">Miasto</th>
+         <th scope="col">Lista zamówień</th>
+       </thead>
+       <tbody>
+         {% for restaurant in restaurants %}
+         <!-- Restaurant template -->
+         <tr>
+           <td>{{restaurant[0]}}</td>
+           <td>{{restaurant[1]}}</td>
+           <td>{{restaurant[2]}}</td>
+           <td>{{restaurant[3]}}</td>
+           <td>{{restaurant[5]}} {{restaurant[4]}}</td>
+           <td>{{restaurant[6]}}</td>
+           <td>{{restaurant[7]}}</td>
+           <td><button onclick="window.location.href='/restaurants/{{restaurant[0]}}'" type="button" class="btn btn-primary">Zamówienia</button></td>
+         </tr>
+        {% endfor %}
+       </tbody>
+     </table>
+   </div>
+</main>
+
+{% include "restaurants-footer.html" %}
