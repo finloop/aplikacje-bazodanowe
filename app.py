@@ -105,10 +105,27 @@ def addrestaurant():
             conn.commit()
             cursor.execute(f"SELECT id FROM RESTAURANTS WHERE name = '{restaurantname}'")
             restaurantid = cursor.fetchone()[0]
-            return redirect(url_for(f"restaurant_orders", restaurant_id=restaurantid))
+            return redirect(url_for("restaurant_orders", restaurant_id=restaurantid))
         except Exception as e:
             print(e)
             cursor.close()
             conn.rollback()
             return render_template("restaurants-create.html", warning=True)
     return render_template("restaurants-create.html")
+
+@app.route("/restaurants")
+def restaurants_table():
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT r.id, r.name, ci.email, ci.phonenumber,
+        addr.address, addr.street, addr.postalcode, cit.name
+        FROM RESTAURANTS AS r
+        INNER JOIN CONTACTINFO AS ci ON r.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON r.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id;""")
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.commit()
+
+    return render_template("restaurants-table.html", restaurants=data)
