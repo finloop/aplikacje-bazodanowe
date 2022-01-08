@@ -65,6 +65,17 @@ def restaurant_orders(restaurant_id: int):
 
 @app.route('/addrestaurant')
 def addrestaurant():
+    """
+    Adds restaurant
+
+    By default it sends an empty from. If a user
+    types something into it and clicks submit, all that
+    data is send via GET request and I access it
+    with `request.args.get`.
+
+    Note that at least ONE dish has to be added.
+
+    """
     restaurantname = request.args.get('restaurantname')
     email = request.args.get('email')
     phonenumber = request.args.get('phonenumber')
