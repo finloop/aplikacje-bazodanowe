@@ -61,7 +61,8 @@ def restaurant_orders(restaurant_id: int):
     return render_template("restaurants.html",
                            orders=orders,
                            restaurant=restaurant,
-                           restaurant_id=restaurant_id)
+                           restaurant_id=restaurant_id,
+                           title="Restauracja " + restaurant["name"])
 
 @app.route('/addrestaurant')
 def addrestaurant():
@@ -110,8 +111,8 @@ def addrestaurant():
             print(e)
             cursor.close()
             conn.rollback()
-            return render_template("restaurants-create.html", warning=True)
-    return render_template("restaurants-create.html")
+            return render_template("restaurants-create.html", warning=True, title="Dodaj restaurację")
+    return render_template("restaurants-create.html", title="Dodaj restaurację")
 
 @app.route("/restaurants")
 def restaurants_table():
@@ -128,4 +129,4 @@ def restaurants_table():
     cursor.close()
     conn.commit()
 
-    return render_template("restaurants-table.html", restaurants=data)
+    return render_template("restaurants-table.html", restaurants=data, title="Lista restauracji")
