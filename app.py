@@ -133,26 +133,46 @@ def restaurants_table():
     
     
 
-@app.route('/make-order')
+@app.route('/make-order', methods=['GET', 'POST'])
 def makeorder():
     """
     Adds order from client
+    
+    Function creating order from client
+    depending on their choice
+    Client can choose ID of dish
+    Using other functions can
+    check his own ID
+    and check dish ID
 
     """
-    clientid = request.args.get('clientid')
-    dishid = request.args.get('dishid')
-    quantity = request.args.get('quantity')
-    paymenttype = request.args.get('paymenttype')
-    
-    cursor = conn.cursor()
-    query = f"CLIENTS_NEW_ORDER('{clientid}','{dishid}','{quantity}','{paymenttype}')"
-    return render_template("client_new_order.html", title="Złóż zamówienie")
+    if request.method=="POST":
+        clientid = request.form.get('client_id')
+        dishid = request.form.get('dish_id')
+        quantity = request.form.get('quantity')
+        paymenttype = request.form.get('payment_type')		
+        cursor = conn.cursor()
+        query = f"CALL CLIENTS_NEW_ORDER({clientid},{dishid},{quantity},'{paymenttype}')"
+		
+
+        try:
+            cursor.execute(query)
+            conn.commit()
+            return redirect("/clients")
+        except Exception as e:
+            print(e)
+            cursor.close()
+            conn.rollback()
+            return render_template("client_new_order.html", warning=True, title="Dodaj klienta")
+    else:
+        return render_template("client_new_order.html", title="Złóż zamówienie")
 
 
 @app.route('/addclient', methods=['GET', 'POST'])
 def addclient():
     """
     Adds client  
+    
 
     """
    
@@ -198,3 +218,77 @@ def clients_table():
 
     return render_template("clients-table.html", clients=data, title="Lista klientów")
     
+@app.route('/available-restaurants')
+def availablerestaurants():
+    """
+    Adds order from client
+
+    """
+  
+    return render_template("clients_available_restaurants.html", title="Dostępne restauracje")
+        
+
+
+
+@app.route('/available-restaurants-info')
+def availablerestaurantsinfo():
+    """
+    Adds order from client
+
+    """
+    
+    try:
+        clientid = request.args.get('client_id', type=int)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM CLIENTS_AVAILABLE_RESTAURANTS({clientid})"       
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        return render_template("available-restaurants-info.html", restaurants=data)
+    except Exception as e:
+        print(e)
+        cursor.close()
+        conn.rollback()
+        return render_template("clients_available_restaurants.html", warning=True, title="Dostępne restauracje")
+        
+        
+        
+        
+        
+@app.route('/available-dishes')
+def availabledishes():
+    """
+    Adds order from client
+
+    """
+  
+    return render_template("clients_available_dishes.html", title="Dostępne dania")
+        
+
+
+
+@app.route('/available-dishes-info')
+def availabledishesinfo():
+    """
+    Adds order from client
+
+    """
+    
+    try:
+        clientid = request.args.get('client_id', type=int)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM CLIENTS_AVAILABLE_DISHES({clientid})"       
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        return render_template("available-dishes-info.html", dishes=data)
+    except Exception as e:
+        print(e)
+        cursor.close()
+        conn.rollback()
+        return render_template("clients_available_dishes.html", warning=True, title="Dostępne dania")
+        
+        
+        

@@ -7,7 +7,7 @@
      </div>
      {% endif %}
      <h1>Dostępne dania</h1>
-      <form id="contactForm" style="display: flex">
+      <form id="contactForm" style="display: flex" action="/available-dishes-info" method="GET">
        
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
         
@@ -23,7 +23,7 @@
 				</div>
 				
 					<div class="d-grid">
-							<button name="submit" class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+							<button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
 					</div>
 		</div>
       </form>
