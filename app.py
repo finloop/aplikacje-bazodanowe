@@ -130,3 +130,71 @@ def restaurants_table():
     conn.commit()
 
     return render_template("restaurants-table.html", restaurants=data, title="Lista restauracji")
+    
+    
+
+@app.route('/make-order')
+def makeorder():
+    """
+    Adds order from client
+
+    """
+    clientid = request.args.get('clientid')
+    dishid = request.args.get('dishid')
+    quantity = request.args.get('quantity')
+    paymenttype = request.args.get('paymenttype')
+    
+    cursor = conn.cursor()
+    query = f"CLIENTS_NEW_ORDER('{clientid}','{dishid}','{quantity}','{paymenttype}')"
+    return render_template("client_new_order.html", title="Złóż zamówienie")
+
+
+@app.route('/addclient', methods=['GET', 'POST'])
+def addclient():
+    """
+    Adds client  
+
+    """
+   
+    if request.method=="POST":
+        clientname = request.form.get('clientname_')
+        email = request.form.get('email_')
+        phonenumber = request.form.get('phonenumber_')
+        street = request.form.get('street_')
+        address = request.form.get('address_')    
+        postalcode = request.form.get('postalcode_')
+        city = request.form.get('cityname_')
+
+        cursor = conn.cursor()
+        query = f"SELECT * FROM CREATE_CLIENT_IF_NOT_EXISTS('{clientname}','{email}','{phonenumber}','{address}','{street}','{postalcode}','{city}')"
+       
+        try:
+            cursor.execute(query)
+            conn.commit()
+            return redirect("/clients")
+        except Exception as e:
+            print(e)
+            cursor.close()
+            conn.rollback()
+            return render_template("clients-create.html", warning=True, title="Dodaj klienta")
+    else:
+        return render_template("clients-create.html", title="Dodaj klienta")
+    
+    
+@app.route('/clients')
+def clients_table():
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT c.id, c.name, ci.email, ci.phonenumber,
+        addr.address, addr.street, addr.postalcode, cit.name
+        FROM CLIENTS AS c
+        INNER JOIN CONTACTINFO AS ci ON c.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON c.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id;""")
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.commit()
+
+    return render_template("clients-table.html", clients=data, title="Lista klientów")
+    
