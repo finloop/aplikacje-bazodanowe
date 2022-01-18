@@ -1,0 +1,74 @@
+#+TITLE: Projekt aplikacje bazodanowe
+
+* Temat projektu
+Celem projektu było stworzenie aplikacji wykorzystującej język PL/PgSQL oraz stworzenie do niej prostego interfejsu z pomocą HTML, CSS i JavaScript.
+
+Stworzona przez nas aplikacja ma słyżyć do zamawiania jedzenia. Aplikacja na skłda się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. !!!!!!! DOPISAĆ DLA KLIENTÓW I DOSTAWCÓW !!!!!!!!
+
+* Baza danych
+W projekcie wykorzystano bazę PostgreSQL ze względu na możliwość łatwej jej konteneryzacji, co pozwoliło nam pracować niezależnie od systemu operacyjnego hosta. Wykorzystaliśmy gotowy schemat bazy z poprzedniego projektu.
+
+[[./img/relacje.png]]
+
+Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieściliśmy go w bazie. Podobnie zrobiliśmy z danymi, wyeksportowaliśmy je do pliku CSV i umieściliśmy w bazie.
+
+** Restauracje
+
+*** Funkcja RESTAURANT LIST ORDERS
+Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
+
+*** Procedura RESTAURAN MAKE ORDER READY
+Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
+
+*** Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
+Jest to najbardzej zaawansowana procedura. Na wejściu przyjmuje informacje o restauracji oraz dania w formie zagnieżdzonej listy. Na podstawie tych danych utworzona zostanie nowa restauracja wraz z jej daniami.
+
+#+NAME: Przykład iteracji po type ARRAY
+#+BEGIN_SRC plpgsql
+FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
+            SELECT MAX(id)+1 INTO dish_id FROM dishes;
+            INSERT INTO dishes
+                       (id, name, price, waittime, restaurantid)
+                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int),
+                        CAST(dish_[3] AS int), restaurant_id);
+END LOOP;
+#+END_SRC
+
+W procedurze tej do wygenerowania id używamy MAX, ponieważ w MS Access dane można było wpisywać ręcznie i sprawiło to, że jeżeli wygenerujemy nowe id z pomocą sekwencji możemy otrzymać konflikt. Jest to jednak mało wydajne i należałoby to w przyszłości zmienić.
+
+*** Procedura RESTAURANTS ADD CUISNE TO RESTAURANT
+Każda restauracja może określiś jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
+
+*** Funkcja
+
+** Funkcje i procedury pomocnicze
+Część funkcji i procedur może być używana w wielu widokach, gdyż np. dodają one miasto lub nowy adres. A adresy restauracji, klientów i dostawców przechowywane są w tej samej tabeli, więc każdy z tych widoków może dodawać adres korzystając z tej samej funkcji.
+*** Funkcja CREATE CITY IF NOT EXISTS
+Dodaje miasto jeżeli nie istnieje w tabeli. Jeżeli miasto już istnieje to zwracany jest jego id.
+*** Funkcja CREATE CONTACT INFO IF NOT EXISTS
+Podobnie do poprzedniej funkcji, dodajemy informacje kontaktowe do tablicy o ile ich tam nie ma i zwracamy id. Jeżeli dane istnieją to zwracamy ich id.
+*** Funkcja CREATE ADDRESS IF NOT EXISTS
+Tworzy ona adres w tabeli o ile go tam nie ma i zwraca jego id.
+
+* Frontend
+Do stworzenia strony wykorzystaliśmy HTML i CSS (Bootstrap5). Strony te serwowane są z pomocą Flaska (Python). Przygotowaliśmy szablony stron, w pythonie wysyłamy zapytania do bazy. Następnie te szablony uzupełniane są o dane pochodzące z bazy.
+** Restauracje
+Z poziomu restauracji dostępne są opcje wyświetlania listy retauracji oraz dodawania restauracji. Z poziomu listy restauracji można przejść do listy zamówień dowolnej restauracji. W liście tej mamy informacje o numerze zamówienia, jakie dania znajdują się w zamówieniu oraz w jakiej ilości.
+
+#+CAPTION: Widok listy restauracji
+#+attr_latex: :width 400px
+[[./img/restaurants-list.png]]
+
+#+CAPTION: Widok dodawania restauracji
+#+attr_latex: :width 400px
+[[./img/restaurants-add.png]]
+
+Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane. W przeciwnym przypadu otrzymamy błąd formularza.
+
+#+CAPTION: Błąd formularza
+#+attr_latex: :width 400px
+[[./img/restaurants-error.png]]
+
+#+CAPTION: Widok listy restauracji
+#+attr_latex: :width 400px
+[[./img/restaurants-orders.png]]

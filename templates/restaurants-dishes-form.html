@@ -1,0 +1,20 @@
+{% macro dish(number) -%}
+  <div class="m-2 p-3 border rounded">
+    <h2>Danie nr {{number}}</h2>
+  <div class="form-floating mb-3">
+      <input name="dishname-{{number}}" class="form-control" id="nazwaDania" type="text" placeholder="Nazwa dania" data-sb-validations="required" />
+      <label for="nazwaDania">Nazwa dania</label>
+      <div class="invalid-feedback" data-sb-feedback="nazwaDania:required">Nazwa dania is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input name="dishprice-{{number}}" class="form-control" id="cena" type="text" placeholder="Cena" data-sb-validations="required" />
+      <label for="cena">Cena</label>
+      <div class="invalid-feedback" data-sb-feedback="cena:required">Cena is required.</div>
+  </div>
+  <div class="form-floating mb-3">
+      <input name="dishwait-{{number}}" class="form-control" id="czasOczekiwania" type="text" placeholder="Czas oczekiwania" data-sb-validations="required" />
+      <label for="czasOczekiwania">Czas oczekiwania</label>
+      <div class="invalid-feedback" data-sb-feedback="czasOczekiwania:required">Czas oczekiwania is required.</div>
+  </div>
+</div>
+{%- endmacro %}
