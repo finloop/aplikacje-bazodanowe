@@ -170,3 +170,12 @@ def restaurants_table():
     return render_template(
         "restaurants-table.html", restaurants=data, title="Lista restauracji"
     )
+
+
+@app.route("/employees/take_order")
+def take_order() -> None:
+    employee = request.args.get("employee")
+    order = request.args.get("order")
+    with conn.cursor() as cursor:
+        cursor.execute(f"CALL take_order_from_restaurant({employee}, {order})")
+    conn.commit()
