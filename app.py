@@ -179,3 +179,12 @@ def take_order() -> None:
     with conn.cursor() as cursor:
         cursor.execute(f"CALL take_order_from_restaurant({employee}, {order})")
     conn.commit()
+
+
+@app.route("/employees/deliver_order")
+def deliver_order() -> str:
+    order = request.args.get("order")
+    with conn.cursor() as cursor:
+        cursor.execute(f"CALL deliver_order({order})")
+    conn.commit()
+    return f"CALL deliver_order({order})"
