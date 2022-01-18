@@ -188,3 +188,13 @@ def deliver_order() -> str:
         cursor.execute(f"CALL deliver_order({order})")
     conn.commit()
     return f"CALL deliver_order({order})"
+
+
+@app.route("/employees/batch_deliver")
+def batch_deliver():
+    orders = request.args.getlist("orders")
+    orders = list(map(lambda x: int(x), orders))
+    with conn.cursor() as cursor:
+        cursor.execute(f"CALL batch_deliver(ARRAY{orders})")
+    conn.commit()
+    return f"CALL batch_deliver(ARRAY{orders})"
