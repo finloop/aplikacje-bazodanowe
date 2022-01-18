@@ -198,3 +198,12 @@ def batch_deliver():
         cursor.execute(f"CALL batch_deliver(ARRAY{orders})")
     conn.commit()
     return f"CALL batch_deliver(ARRAY{orders})"
+
+
+@app.route("/employees/undelivered")
+def list_undelivered():
+    emp_id = int(request.args.get("eid"))
+    with conn.cursor() as cursor:
+        cursor.execute(f"SELECT * FROM employees_list_undelivered_order({emp_id});")
+        results = cursor.fetchall()
+    return str(results)
