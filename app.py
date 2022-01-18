@@ -96,7 +96,7 @@ def addrestaurant():
         map(
             lambda y: request.args.get(y),
             filter(
-                lambda x: "dishname" in x and request.args.get(x) is not "",
+                lambda x: "dishname" in x and request.args.get(x) != "",
                 dict(request.args),
             ),
         )
@@ -106,7 +106,7 @@ def addrestaurant():
         map(
             lambda y: request.args.get(y),
             filter(
-                lambda x: "dishprice" in x and request.args.get(x) is not "",
+                lambda x: "dishprice" in x and request.args.get(x) != "",
                 dict(request.args),
             ),
         )
@@ -116,7 +116,7 @@ def addrestaurant():
         map(
             lambda y: request.args.get(y),
             filter(
-                lambda x: "dishwait" in x and request.args.get(x) is not "",
+                lambda x: "dishwait" in x and request.args.get(x) != "",
                 dict(request.args),
             ),
         )
