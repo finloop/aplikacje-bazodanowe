@@ -171,8 +171,7 @@ def makeorder():
 @app.route('/addclient', methods=['GET', 'POST'])
 def addclient():
     """
-    Adds client 
-    
+    Dodanie klienta do bazy danych    
 
     """
    
@@ -203,6 +202,10 @@ def addclient():
     
 @app.route('/clients')
 def clients_table():
+    """
+    Strona wyświetlająca informacje o klientach    
+
+    """
     cursor = conn.cursor()
     cursor.execute("""
     SELECT c.id, c.name, ci.email, ci.phonenumber,
@@ -221,7 +224,12 @@ def clients_table():
 @app.route('/available-restaurants')
 def availablerestaurants():
     """
-    Adds order from client
+    Strona wykorzystywana do wpisywania ID klienta
+    w celu otrzymania informacji o dostępnych 
+    restauracjach dla klienta o danym ID. 
+    Z której jesteśmy przekierowani na stronę
+    z tabelą wyświetlającą wszystkie dostępne
+    restauracja w mieście klienta.
 
     """
   
@@ -233,7 +241,9 @@ def availablerestaurants():
 @app.route('/available-restaurants-info')
 def availablerestaurantsinfo():
     """
-    Adds order from client
+    Wyświetlenie informacji dot. dostępnych restauracji
+    dla klienta o danym ID (które podano na stronie
+    wcześniej)
 
     """
     
@@ -259,7 +269,12 @@ def availablerestaurantsinfo():
 @app.route('/available-dishes')
 def availabledishes():
     """
-    Adds order from client
+    Strona wykorzystywana do wpisywania ID klienta
+    w celu otrzymania informacji o dostępnych 
+    daniach dla klienta o danym ID. 
+    Z której jesteśmy przekierowani na stronę
+    z tabelą wyświetlającą wszystkie dostępne
+    dania w mieście klienta.
 
     """
   
@@ -271,7 +286,9 @@ def availabledishes():
 @app.route('/available-dishes-info')
 def availabledishesinfo():
     """
-    Adds order from client
+    Wyświetlenie informacji dot. dostępnych dań
+    dla klienta o danym ID (które podano na stronie
+    wcześniej)
 
     """
     
