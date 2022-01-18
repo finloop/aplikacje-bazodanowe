@@ -207,3 +207,14 @@ def list_undelivered():
         cursor.execute(f"SELECT * FROM employees_list_undelivered_order({emp_id});")
         results = cursor.fetchall()
     return str(results)
+
+
+@app.route("/employees/orders_available")
+def list_available_orders():
+    city_id = int(request.args.get("cid"))
+    with conn.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM employees_get_available_orders_to_take({city_id});"
+        )
+        results = cursor.fetchall()
+    return str(results)
