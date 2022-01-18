@@ -12,13 +12,8 @@
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
         
 				<div class="m-2 p-3 border rounded">
-										
-				  <div class="form-floating mb-3">
-					  <input name="client_id" class="form-control" id="client_id" type="number" placeholder="ID" data-sb-validations="required" />
-					  <label for="client_id">ID klienta</label>
-					  <div class="invalid-feedback" data-sb-feedback="clientname_:required">ID is required.</div>
-				  </div>
-				  
+					<input type="number" hidden name="client_id" value={{clientid}} />
+				  			  
 				  <div class="form-floating mb-3">
 					  <input name="dish_id" class="form-control" id="dish_id" type="number" placeholder="ID" data-sb-validations="required" />
 					  <label for="dish_id">ID dania</label>
@@ -33,7 +28,7 @@
 				  
 				  <div class="form-floating mb-3">
 					  <input name="payment_type" class="form-control" id="payment_type" type="text" placeholder="Typ płatności" data-sb-validations="required" />
-					  <label for="payment_type">Typ płatności</label>
+					  <label for="payment_type">Typ płatności (Karta, Gotówka, Przelew, Prepaid)</label>
 					  <div class="invalid-feedback" data-sb-feedback="payment_type:required">Typ płatności is required.</div>
 				  </div>
 				  		  		  

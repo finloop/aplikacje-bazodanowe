@@ -133,45 +133,14 @@ def restaurants_table():
     
     
 
-@app.route('/make-order', methods=['GET', 'POST'])
-def makeorder():
-    """
-    Adds order from client
-    
-    Function creating order from client
-    depending on their choice
-    Client can choose ID of dish
-    Using other functions can
-    check his own ID
-    and check dish ID
-
-    """
-    if request.method=="POST":
-        clientid = request.form.get('client_id')
-        dishid = request.form.get('dish_id')
-        quantity = request.form.get('quantity')
-        paymenttype = request.form.get('payment_type')		
-        cursor = conn.cursor()
-        query = f"CALL CLIENTS_NEW_ORDER({clientid},{dishid},{quantity},'{paymenttype}')"
-		
-
-        try:
-            cursor.execute(query)
-            conn.commit()
-            return redirect("/clients")
-        except Exception as e:
-            print(e)
-            cursor.close()
-            conn.rollback()
-            return render_template("client_new_order.html", warning=True, title="Dodaj klienta")
-    else:
-        return render_template("client_new_order.html", title="Złóż zamówienie")
-
 
 @app.route('/addclient', methods=['GET', 'POST'])
 def addclient():
     """
-    Dodanie klienta do bazy danych    
+    Dodanie klienta do bazy danych poprzez
+    zapytanie typu POST. Wyświetla nam się
+    strona z pustym formularzem, który
+    należy wypełnić
 
     """
    
@@ -224,16 +193,28 @@ def clients_table():
 @app.route('/available-restaurants')
 def availablerestaurants():
     """
-    Strona wykorzystywana do wpisywania ID klienta
+    Strona wykorzystywana do wybierania klienta
     w celu otrzymania informacji o dostępnych 
     restauracjach dla klienta o danym ID. 
     Z której jesteśmy przekierowani na stronę
     z tabelą wyświetlającą wszystkie dostępne
-    restauracja w mieście klienta.
+    restauracje w mieście klienta.
 
     """
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT c.id, c.name, ci.email, ci.phonenumber,
+        addr.address, addr.street, addr.postalcode, cit.name
+        FROM CLIENTS AS c
+        INNER JOIN CONTACTINFO AS ci ON c.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON c.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id;""")
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.commit()
   
-    return render_template("clients_available_restaurants.html", title="Dostępne restauracje")
+    return render_template("clients_available_restaurants.html", title="Dostępne restauracje", clients=data)
         
 
 
@@ -241,9 +222,9 @@ def availablerestaurants():
 @app.route('/available-restaurants-info')
 def availablerestaurantsinfo():
     """
-    Wyświetlenie informacji dot. dostępnych restauracji
-    dla klienta o danym ID (które podano na stronie
-    wcześniej)
+    Wyświetlenie informacji dot. dostępnych 
+    restauracji dla wybranego klienta 
+    o danym ID
 
     """
     
@@ -269,7 +250,7 @@ def availablerestaurantsinfo():
 @app.route('/available-dishes')
 def availabledishes():
     """
-    Strona wykorzystywana do wpisywania ID klienta
+    Strona wykorzystywana do wybierania klienta
     w celu otrzymania informacji o dostępnych 
     daniach dla klienta o danym ID. 
     Z której jesteśmy przekierowani na stronę
@@ -278,7 +259,20 @@ def availabledishes():
 
     """
   
-    return render_template("clients_available_dishes.html", title="Dostępne dania")
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT c.id, c.name, ci.email, ci.phonenumber,
+        addr.address, addr.street, addr.postalcode, cit.name
+        FROM CLIENTS AS c
+        INNER JOIN CONTACTINFO AS ci ON c.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON c.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id;""")
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.commit()
+  
+    return render_template("clients_available_dishes.html", title="Dostępne dania", clients=data)
         
 
 
@@ -287,8 +281,7 @@ def availabledishes():
 def availabledishesinfo():
     """
     Wyświetlenie informacji dot. dostępnych dań
-    dla klienta o danym ID (które podano na stronie
-    wcześniej)
+    dla wybranego klienta o danym ID
 
     """
     
@@ -308,4 +301,58 @@ def availabledishesinfo():
         return render_template("clients_available_dishes.html", warning=True, title="Dostępne dania")
         
         
+@app.route('/make-order-clients')
+def makeorderclients():
+    """
+    Strona wyświetlająca listę klientów, na któej klient wybiera 
+    pozycję ze sobą, potem następuje przekierowanie na stronę
+    /make-order
+
+    """
+  
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT c.id, c.name, ci.email, ci.phonenumber,
+        addr.address, addr.street, addr.postalcode, cit.name
+        FROM CLIENTS AS c
+        INNER JOIN CONTACTINFO AS ci ON c.contactinfoid = ci.id
+        INNER JOIN ADDRESS AS addr ON c.addressid = addr.id
+        INNER JOIN CITIES AS cit ON addr.cityid = cit.id;""")
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.commit()
+  
+    return render_template("make-order-clients.html", title="Składanie zamówienia", clients=data)        
         
+@app.route('/make-order', methods=['GET', 'POST'])
+def makeorder():
+    """
+    Strona zachowuje id klienta który został wybrany
+    i pozwala wybrać danie poprzez id, ilość wybranego
+    dania oraz rodzaj płatności.
+
+    """
+    if request.method=="POST":
+        clientid=request.form.get('client_id')
+        dishid = request.form.get('dish_id')
+        quantity = request.form.get('quantity')
+        paymenttype = request.form.get('payment_type')		
+        cursor = conn.cursor()
+        query = f"CALL CLIENTS_NEW_ORDER({clientid},{dishid},{quantity},'{paymenttype}')"
+		
+
+        try:
+            cursor.execute(query)
+            conn.commit()
+            return redirect("/clients")
+        except Exception as e:
+            print(e)
+            cursor.close()
+            conn.rollback()
+            return render_template("client_new_order.html", warning=True, title="Dodaj klienta")
+    else:
+        clientid=request.args.get('client_id')
+        
+        return render_template("client_new_order.html", title="Złóż zamówienie", clientid=clientid)             
+       
