@@ -171,7 +171,7 @@ def makeorder():
 @app.route('/addclient', methods=['GET', 'POST'])
 def addclient():
     """
-    Adds client  
+    Adds client 
     
 
     """
