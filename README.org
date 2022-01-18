@@ -29,7 +29,8 @@ FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
             SELECT MAX(id)+1 INTO dish_id FROM dishes;
             INSERT INTO dishes
                        (id, name, price, waittime, restaurantid)
-                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int), CAST(dish_[3] AS int), restaurant_id);
+                VALUES (dish_id, dish_[1], CAST(dish_[2] AS int),
+                        CAST(dish_[3] AS int), restaurant_id);
 END LOOP;
 #+END_SRC
 
