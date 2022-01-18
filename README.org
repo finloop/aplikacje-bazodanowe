@@ -17,10 +17,10 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
 *** Funkcja RESTAURANT LIST ORDERS
 Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
 
-*** Procedura RESTAURAN MAKE ORDER_READY
+*** Procedura RESTAURAN MAKE ORDER READY
 Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
 
-*** Procedura RESTAURANTS CREATE RESTAURANT IF NOT_EXISTS
+*** Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
 Jest to najbardzej zaawansowana procedura. Na wejściu przyjmuje informacje o restauracji oraz dania w formie zagnieżdzonej listy. Na podstawie tych danych utworzona zostanie nowa restauracja wraz z jej daniami.
 
 #+NAME: Przykład iteracji po type ARRAY
