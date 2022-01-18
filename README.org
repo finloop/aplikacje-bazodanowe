@@ -61,3 +61,13 @@ Z poziomu restauracji dostępne są opcje wyświetlania listy retauracji oraz do
 #+CAPTION: Widok dodawania restauracji
 #+attr_latex: :width 400px
 [[./img/restaurants-add.png]]
+
+Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane. W przeciwnym przypadu otrzymamy błąd formularza.
+
+#+CAPTION: Błąd formularza
+#+attr_latex: :width 400px
+[[./img/restaurants-error.png]]
+
+#+CAPTION: Widok listy restauracji
+#+attr_latex: :width 400px
+[[./img/restaurants-orders.png]]
