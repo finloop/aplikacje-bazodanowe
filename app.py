@@ -218,3 +218,16 @@ def list_available_orders():
         )
         results = cursor.fetchall()
     return str(results)
+
+
+@app.route("/employees/get_profit")
+def get_employee_profit():
+    employee_id = int(request.args.get("eid"))
+    end_date = request.args.get("end")
+    start_date = request.args.get("start")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM employees_get_profit({employee_id}, '{start_date}', '{end_date}')"
+        )
+        results = cursor.fetchone()
+    return str(results)
