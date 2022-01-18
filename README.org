@@ -1,0 +1,31 @@
+#+TITLE: Projekt aplikacje bazodanowe
+
+* Temat projektu
+Celem projektu było stworzenie aplikacji wykorzystującej język PL/PgSQL oraz stworzenie do niej prostego interfejsu z pomocą HTML, CSS i JavaScript.
+
+Stworzona przez nas aplikacja ma słyżyć do zamawiania jedzenia. Aplikacja na skłda się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. !!!!!!! DOPISAĆ DLA KLIENTÓW I DOSTAWCÓW !!!!!!!!
+
+* Baza danych
+W projekcie wykorzystano bazę PostgreSQL ze względu na możliwość łatwej jej konteneryzacji, co pozwoliło nam pracować niezależnie od systemu operacyjnego hosta. Wykorzystaliśmy gotowy schemat bazy z poprzedniego projektu.
+
+[[./img/relacje.png]]
+
+Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieściliśmy go w bazie. Podobnie zrobiliśmy z danymi, wyeksportowaliśmy je do pliku CSV i umieściliśmy w bazie.
+
+** Restauracje
+Dla restauracji zostały stworzone 3 funkcje oraz 3 procedury, które pozwalają na interakcję z bazą.
+
+*** FUNKCJA RESTAURANT_LIST_ORDERS
+Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
+
+*** PROCEDURA RESTAURAN_MAKE_ORDER_READY
+Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
+
+** Funkcje i procedury pomocnicze
+Część funkcji i procedur może być używana w wielu widokach, gdyż np. dodają one miasto lub nowy adres. A adresy restauracji, klientów i dostawców przechowywane są w tej samej tabeli, więc każdy z tych widoków może dodawać adres korzystając z tej samej funkcji.
+*** Funkcja CREATE_CITY_IF_NOT_EXISTS
+Dodaje miasto jeżeli nie istnieje w tabeli. Jeżeli miasto już istnieje to zwracany jest jego id.
+*** Funkcja CREATE_CONTACT_INFO_IF_NOT_EXISTS
+Podobnie do poprzedniej funkcji, dodajemy informacje kontaktowe do tablicy o ile ich tam nie ma i zwracamy id. Jeżeli dane istnieją to zwracamy ich id.
+*** Funkcja CREATE_ADDRESS_IF_NOT_EXISTS
+Tworzy ona adres w tabeli o ile go tam nie ma i zwraca jego id.
