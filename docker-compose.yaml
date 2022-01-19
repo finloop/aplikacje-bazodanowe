@@ -19,7 +19,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: $PGADMIN_EMAIL
       PGADMIN_DEFAULT_PASSWORD: $PGADMIN_PASSWORD
     ports:
-     - 8090:80
+     - 80:80
 
 volumes:
   data-volume:
