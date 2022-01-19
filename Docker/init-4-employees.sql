@@ -38,7 +38,7 @@ END;
 $BODY$;
 -- SELECT * FROM employees_list_undelivered_orders(2)
 
-CREATE OR REPLACE FUNCTION employees_get_available_orders_to_take(cityid int)
+CREATE OR REPLACE FUNCTION employees_get_available_orders_to_take(cityid_arg int)
     RETURNS table (order_id int,
                    restaurant_name character varying,
                    restaurant_street character varying,
@@ -54,7 +54,8 @@ BEGIN
     FROM restaurants
     INNER JOIN address ON address.id = restaurants.addressid
     INNER JOIN orders ON orders.restaurantid = restaurants.id
-    WHERE orders.employeeid IS NULL;
+    WHERE orders.employeeid IS NULL
+    AND address.cityid = cityid_arg;
 END;
 $BODY$;
 
