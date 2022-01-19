@@ -1,0 +1,67 @@
+{% include "clients-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     {% if warning %}
+     <div class="alert alert-warning" role="alert">
+       Błąd w formularzu.
+     </div>
+     {% endif %}
+     <h1>Dodawanie klienta</h1>
+      <form id="contactForm" style="display: flex" action="/addclient" method="POST">
+       
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
+        
+				<div class="m-2 p-3 border rounded">
+										
+				  <div class="form-floating mb-3">
+					  <input name="clientname_" required class="form-control" id="clientname_" type="text" placeholder="Imię nazwisko" data-sb-validations="required" />
+					  <label for="clientname_">Imię i nazwisko</label>
+					  <div class="invalid-feedback" data-sb-feedback="clientname_:required">Imię i nazwisko is required.</div>
+				  </div>
+				  
+				  <div class="form-floating mb-3">
+					  <input name="email_" required class="form-control" id="email_" type="email" placeholder="email" />
+					  <label for="email_">email</label>
+				  </div>
+				  
+				  <div class="form-floating mb-3">
+					  <input name="phonenumber_" required class="form-control" id="phonenumber_" type="text" maxlength="9" placeholder="Numer telefonu" data-sb-validations="required" />
+					  <label for="phonenumber_">Numer telefonu</label>
+					  <div class="invalid-feedback" data-sb-feedback="phonenumber_:required">Numer telefonu is required.</div>
+				  </div>
+				  
+				  <div class="form-floating mb-3">
+					  <input name="street_" required class="form-control" id="street_" type="text" placeholder="Ulica" data-sb-validations="required" />
+					  <label for="street_">Ulica</label>
+					  <div class="invalid-feedback" data-sb-feedback="street_:required">Ulica is required.</div>
+				  </div>
+				  
+				   <div class="form-floating mb-3">
+					  <input name="address_" required class="form-control" id="address_" type="text" placeholder="Nr domu/mieszkania" data-sb-validations="required" />
+					  <label for="address_">Numer domu/mieszkania</label>
+					  <div class="invalid-feedback" data-sb-feedback="address_:required">Numer domu/mieszkania is required.</div>
+				  </div>
+				  				   
+				  
+				   <div class="form-floating mb-3">
+					  <input name="postalcode_" required class="form-control" id="postalcode_" type="text" placeholder="Kod pocztowy" data-sb-validations="required" />
+					  <label for="postalcode_">Kod pocztowy</label>
+					  <div class="invalid-feedback"  data-sb-feedback="postalcode_:required">Kod pocztowy is required.</div>
+				  </div>
+				  
+				   <div class="form-floating mb-3">
+					  <input name="cityname_" required class="form-control" id="cityname_" type="text" placeholder="Miasto" data-sb-validations="required" />
+					  <label for="cityname_">Miasto</label>
+					  <div class="invalid-feedback" data-sb-feedback="cityname_:required">Miasto is required.</div>
+				  </div>
+				  
+				</div>
+				
+					<div class="d-grid">
+							<button name="submit" class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+					</div>
+		</div>
+      </form>
+  </div>
+</main>
+{% include "clients-footer.html" %}

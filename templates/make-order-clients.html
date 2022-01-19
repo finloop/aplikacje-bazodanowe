@@ -1,0 +1,34 @@
+{% include "clients-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     <table class="table">
+       <thead class="thead-dark">
+         <th scope="col">Id</th>
+         <th scope="col">Imię i nazwisko</th>
+         <th scope="col">Email</th>
+         <th scope="col">Numer telefonu</th>
+         <th scope="col">Nr domu/mieszkania</th>
+		 <th scope="col">Miasto</th>
+         <th scope="col">Kod pocztowy</th>         
+		 <th> </th>
+       </thead>	   
+       <tbody>
+         {% for client in clients %}
+         <!-- Client template -->
+         <tr>
+           <td>{{client[0]}}</td>
+           <td>{{client[1]}}</td>
+           <td>{{client[2]}}</td>
+           <td>{{client[3]}}</td>
+           <td>{{client[5]}} {{client[4]}}</td>
+		   <td>{{client[7]}}</td>   
+           <td>{{client[6]}}</td>       
+		   <td><button onclick="window.location.href='/make-order?client_id={{client[0]}}'" type="button" class="btn btn-primary">Złóż zamówienie</button></td>		   
+         </tr>
+        {% endfor %}
+       </tbody>
+     </table>
+   </div>
+</main>
+
+{% include "clients-footer.html" %}

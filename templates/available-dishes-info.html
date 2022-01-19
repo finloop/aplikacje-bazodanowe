@@ -1,0 +1,22 @@
+{% include "clients-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     <table class="table">
+       <thead class="thead-dark">
+         <th scope="col">Id</th>
+         <th scope="col">Nazwa dania</th>     
+       </thead>
+       <tbody>
+         {% for dish in dishes %}
+         <!-- Client template -->
+         <tr>
+           <td>{{dish[0]}}</td>
+           <td>{{dish[1]}}</td>    		   
+         </tr>
+        {% endfor %}
+       </tbody>
+     </table>
+   </div>
+</main>
+
+{% include "clients-footer.html" %}
