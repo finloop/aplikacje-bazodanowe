@@ -1,4 +1,5 @@
 #+TITLE: Projekt aplikacje bazodanowe
+#+LATEX_HEADER: \usepackage{float}
 
 * Temat projektu
 Celem projektu było stworzenie aplikacji wykorzystującej język PL/PgSQL oraz stworzenie do niej prostego interfejsu z pomocą HTML, CSS i JavaScript.
@@ -76,57 +77,54 @@ Do stworzenia strony wykorzystaliśmy HTML i CSS (Bootstrap5). Strony te serwowa
 Z poziomu restauracji dostępne są opcje wyświetlania listy retauracji oraz dodawania restauracji. Z poziomu listy restauracji można przejść do listy zamówień dowolnej restauracji. W liście tej mamy informacje o numerze zamówienia, jakie dania znajdują się w zamówieniu oraz w jakiej ilości.
 
 #+CAPTION: Widok listy restauracji
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-list.png]]
 
 #+CAPTION: Widok dodawania restauracji
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-add.png]]
 
 Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane. W przeciwnym przypadu otrzymamy błąd formularza.
 
 #+CAPTION: Błąd formularza
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-error.png]]
 
 #+CAPTION: Widok listy restauracji
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-orders.png]]
 
 ** Klienci
 Z poziomu klientów dostępne są opcje wyświetlenia listy klientów, dodanie nowego klienta, sprawdzenie dostępnych restauracji, sprawdzenie dostępnych dań oraz złożenie zamówienia.
 #+CAPTION: Lista klientów
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_1.png]]
 
 #+CAPTION: Dodawanie klients
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_2.png]]
 
 #+CAPTION: Restauracje dostępne dla klienta
-#+attr_latex: :width 400px
-
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_3.png]]
+
 Np. po kliknięciu przycisku Restauracje dla klienta o ID = 7 otrzymujemy następującą stronę:
-
 #+CAPTION: Lista dostępnych restauracji
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_4.png]]
-
 Analogicznie dla dostępnych dań:
-
 #+CAPTION: Lista klientów - dostępne dania
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_5.png]]
 
 #+CAPTION: Dania dostępne dla klients
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_6.png]]
 
 #+CAPTION: Lista klientów - składanie zamówienia
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_7.png]]
 
 #+CAPTION: Składanie zamówienia:
-#+attr_latex: :width 400px
+#+attr_latex: :width 300px :placement [H]
 [[./img/clients_8.png]]
