@@ -4,11 +4,11 @@
 
 CREATE TYPE client_details AS
 (
-    first_name character varying,
-    last_name character varying,
+    client_name character varying,
     phone character varying,
     street character varying,
     address character varying,
+    city_id int,
     order_id int
 );
 
@@ -18,38 +18,39 @@ ALTER TYPE client_details
     OWNER TO postgres;
 
 CREATE OR REPLACE FUNCTION employees_list_undelivered_order(employee_id int)
-    RETURNS client_details
+    RETURNS table (client_info client_details)
     LANGUAGE 'plpgsql'
-
 AS $BODY$
 DECLARE
     client_info client_details;
 BEGIN
-    SELECT  clients.name, contactinfo.phonenumber, address.street, address.address, orders.id
-        INTO client_info
+    RETURN QUERY
+    SELECT clients.name, contactinfo.phonenumber, address.street, address.address, cities.id, orders.id
         FROM clients
         INNER JOIN address ON address.id = clients.addressid
         INNER JOIN contactinfo ON contactinfo.id = clients.contactinfoid
         INNER JOIN orders ON orders.clientid = clients.id
         INNER JOIN employees ON employees.id = orders.employeeid
+        INNER JOIN cities ON cities.id = address.cityid
         WHERE employees.id  = employee_id
         AND orders.enddate IS NULL;
-    RETURN client_info;
 END;
 $BODY$;
 -- SELECT * FROM employees_list_undelivered_orders(2)
 
 CREATE OR REPLACE FUNCTION employees_get_available_orders_to_take(cityid int)
-    RETURNS table (restaurant_name character varying,
+    RETURNS table (order_id int,
+                   restaurant_name character varying,
                    restaurant_street character varying,
                    restaurant_address character varying)
     LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN
     RETURN QUERY
-    SELECT restaurants.name "restaurant_name",
-        address.street "restaurant_street",
-        address.address "restaurant_address"
+    SELECT orders.id "order_id",
+           restaurants.name "restaurant_name",
+           address.street "restaurant_street",
+           address.address "restaurant_address"
     FROM restaurants
     INNER JOIN address ON address.id = restaurants.addressid
     INNER JOIN orders ON orders.restaurantid = restaurants.id
@@ -79,7 +80,7 @@ BEGIN
         INNER JOIN dishes ON dishesinorder.dishid = dishes.id
         WHERE orders.enddate BETWEEN startdate_date AND enddate_date
         AND orders.employeeid = employee_id;
-    RETURN ROUND(sum_of_profit, 2);
+    RETURN sum_of_profit;
 END;
 $BODY$;
 -- SELECT * FROM employees_get_profit(2, "2020-01-01", "2021-12-31")
