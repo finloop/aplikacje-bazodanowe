@@ -92,3 +92,41 @@ Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane
 #+CAPTION: Widok listy restauracji
 #+attr_latex: :width 400px
 [[./img/restaurants-orders.png]]
+
+** Klienci
+Z poziomu klientów dostępne są opcje wyświetlenia listy klientów, dodanie nowego klienta, sprawdzenie dostępnych restauracji, sprawdzenie dostępnych dań oraz złożenie zamówienia.
+#+CAPTION: Lista klientów
+#+attr_latex: :width 400px
+[[./img/clients_1.png]]
+
+#+CAPTION: Dodawanie klients
+#+attr_latex: :width 400px
+[[./img/clients_2.png]]
+
+#+CAPTION: Restauracje dostępne dla klienta
+#+attr_latex: :width 400px
+
+[[./img/clients_3.png]]
+Np. po kliknięciu przycisku Restauracje dla klienta o ID = 7 otrzymujemy następującą stronę:
+
+#+CAPTION: Lista dostępnych restauracji
+#+attr_latex: :width 400px
+[[./img/clients_4.png]]
+
+Analogicznie dla dostępnych dań:
+
+#+CAPTION: Lista klientów - dostępne dania
+#+attr_latex: :width 400px
+[[./img/clients_5.png]]
+
+#+CAPTION: Dania dostępne dla klients
+#+attr_latex: :width 400px
+[[./img/clients_6.png]]
+
+#+CAPTION: Lista klientów - składanie zamówienia
+#+attr_latex: :width 400px
+[[./img/clients_7.png]]
+
+#+CAPTION: Składanie zamówienia:
+#+attr_latex: :width 400px
+[[./img/clients_8.png]]
