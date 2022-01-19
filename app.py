@@ -172,9 +172,7 @@ def restaurants_table():
     )
 
 
-@app.route(
-    "/employees/<int:employee_id>/cities/<int:city_id>/take_order/<int:order_id>"
-)
+@app.route("/employees/<int:employee_id>/take_order/<int:order_id>")
 def take_order(employee_id: int, order_id: int):
     with conn.cursor() as cursor:
         cursor.execute(f"CALL take_order_from_restaurant({employee_id}, {order_id})")
