@@ -141,5 +141,5 @@ $ flask run
 #+END_SRC
 Aby przejść do poszczególnych widoków należy wpisać:
 1. Klienci: [[http://localhost:5000/clients]]
-2. Restauracje: [[http://ocalhost:5000/restaurants]]
+2. Restauracje: [[http://localhost:5000/restaurants]]
 3. Dostawcy: [[http://localhost:5000/employees]]
