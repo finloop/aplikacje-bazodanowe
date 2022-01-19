@@ -111,20 +111,56 @@ Z poziomu restauracji dostępne są opcje wyświetlania listy retauracji oraz do
 #+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-list.png]]
 
+Widok ten generowany jest przez:
+
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurant-list.png]]
+
+Z szablonu:
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurants-table.png]]
+
+
 #+CAPTION: Widok dodawania restauracji
 #+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-add.png]]
 
-Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane. W przeciwnym przypadu otrzymamy błąd formularza.
+Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane. W przeciwnym przypadu otrzymamy błąd formularza. Dane z tego formularza wysyłane są do:
+
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurants-add-query.png]]
+
+W przypadku błędu, formularz zwróci odpowiedni komunikat:
 
 #+CAPTION: Błąd formularza
 #+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-error.png]]
 
-#+CAPTION: Widok listy restauracji
+#+CAPTION: Widok listy zamówień w restauracji
 #+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-orders.png]]
-Po kliknięciu na przycisk oznacz jako do odebrania, uruchomiona zostaje funkcja
+
+Po kliknięciu na przycisk oznacz jako do odebrania, uruchomiona zostaje procedura kończąca zamówienia.
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurant-orders-ready.png]]
+
+Widoczne po prawej stronie informacje o restauracji pozyskiwane są z pomocą funkcji:
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurant-orders-info.png]]
+
+Natomiast lista zamówień generowana jest z użyciem:
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurant-orders-list.png]]
+
+Te dane przekazywane są do szablonu strony z pomocą:
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurant-render.png]]
+
+Sam szablon ma następującą postać:
+#+attr_latex: :width 300px :placement [H]
+[[./img/restaurants-template.png]]
+
+
 
 ** Klienci
 Z poziomu klientów dostępne są opcje wyświetlenia listy klientów, dodanie nowego klienta, sprawdzenie dostępnych restauracji, sprawdzenie dostępnych dań oraz złożenie zamówienia.
@@ -189,12 +225,14 @@ W panelu sterowania znajdują się 3 możliwe opcje, z czego 2 możliwe do konfi
     [[file:img/employees-to_deliver.png]]
 
 * Uruchamianie projektu
-Do uruchomienia projektu potrzebne są: Docker, Docker compose oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
+Do uruchomienia projektu potrzebne są: Docker, Docker compose, git oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
 #+BEGIN_SRC bash
+$ git clone
 $ docker compose up -d
 #+END_SRC
 Jeżeli baza już działa, możemy uruchomić serwer www:
 #+BEGIN_SRC bash
+$ pip install -r requirements.txt
 $ flask run
 #+END_SRC
 Aby przejść do poszczególnych widoków należy wpisać:
