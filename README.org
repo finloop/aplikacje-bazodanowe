@@ -143,3 +143,6 @@ Aby przejść do poszczególnych widoków należy wpisać:
 1. Klienci: [[http://localhost:5000/clients]]
 2. Restauracje: [[http://localhost:5000/restaurants]]
 3. Dostawcy: [[http://localhost:5000/employees]]
+
+* Podsumowanie i plany rozwoju
+W projekcie udało nam się stworzyć podstawową aplikację korzystającą z bazy Postgres oraz wykorzystującą PL/pgSQL. Demonstruje ona w jaki sposób mogłaby działać aplikacja do zamawiania jedzenia. Oczywiście jest to wyłącznie prototyp i właściwa aplikacja wymagałaby stworzenia systemu logowania, profili oraz ulepszonego UI.
