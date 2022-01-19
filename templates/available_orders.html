@@ -18,7 +18,7 @@
                         <td><input type="checkbox" name="orders" value="{{order[0]}}" /></td>
                         <td>{{order[1]}}</td>
                         <td>{{order[2]}} {{order[3]}}</td>
-                        <td><button onclick="window.location.href='/employees/{{emp_id}}/cities/{{city_id}}/{{order[0]}}'" type="button" class="btn btn-primary">Weź zamówienie</button></td>
+                        <td><button onclick="window.location.href='/employees/{{emp_id}}/take_order/{{order[0]}}'" type="button" class="btn btn-primary">Weź zamówienie</button></td>
                     </tr>
                 {% endfor %}
             </tbody>
