@@ -228,7 +228,7 @@ W panelu sterowania znajdują się 3 możliwe opcje, z czego 2 możliwe do konfi
 Do uruchomienia projektu potrzebne są: Docker, Docker compose, git oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
 #+BEGIN_SRC bash
 $ git clone git@github.com:finloop/aplikacje-bazodanowe.git
-% cd aplikacje-bazodanowe
+$ cd aplikacje-bazodanowe
 $ docker compose up -d
 #+END_SRC
 Jeżeli baza już działa, możemy uruchomić serwer www:
