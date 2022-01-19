@@ -13,42 +13,62 @@ W projekcie wykorzystano bazę PostgreSQL ze względu na możliwość łatwej je
 Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieściliśmy go w bazie. Podobnie zrobiliśmy z danymi, wyeksportowaliśmy je do pliku CSV i umieściliśmy w bazie.
 
 ** Restauracje
+*** Procedury
+1. Procedura RESTAURAN MAKE ORDER READY
+    Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
 
-*** Funkcja RESTAURANT LIST ORDERS
-Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
-
-*** Procedura RESTAURAN MAKE ORDER READY
-Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
-
-*** Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
-Jest to najbardzej zaawansowana procedura. Na wejściu przyjmuje informacje o restauracji oraz dania w formie zagnieżdzonej listy. Na podstawie tych danych utworzona zostanie nowa restauracja wraz z jej daniami.
-
-#+NAME: Przykład iteracji po type ARRAY
-#+BEGIN_SRC plpgsql
-FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
+2. Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
+    Jest to najbardzej zaawansowana procedura. Na wejściu przyjmuje informacje o restauracji oraz dania w formie zagnieżdzonej listy. Na podstawie tych danych utworzona zostanie nowa restauracja wraz z jej daniami.
+    #+NAME: Przykład iteracji po type ARRAY
+    #+BEGIN_SRC plpgsql
+    FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
             SELECT MAX(id)+1 INTO dish_id FROM dishes;
             INSERT INTO dishes
                        (id, name, price, waittime, restaurantid)
                 VALUES (dish_id, dish_[1], CAST(dish_[2] AS int),
                         CAST(dish_[3] AS int), restaurant_id);
-END LOOP;
-#+END_SRC
+    END LOOP;
+    #+END_SRC
+    W procedurze tej do wygenerowania id używamy MAX, ponieważ w MS Access dane można było wpisywać ręcznie i sprawiło to, że jeżeli wygenerujemy nowe id z pomocą sekwencji możemy otrzymać konflikt. Jest to jednak mało wydajne i należałoby to w przyszłości zmienić.
+3. Procedura RESTAURANTS ADD CUISNE TO RESTAURANT
+    Każda restauracja może określiś jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
 
-W procedurze tej do wygenerowania id używamy MAX, ponieważ w MS Access dane można było wpisywać ręcznie i sprawiło to, że jeżeli wygenerujemy nowe id z pomocą sekwencji możemy otrzymać konflikt. Jest to jednak mało wydajne i należałoby to w przyszłości zmienić.
+*** Funckcje
+1. Funkcja RESTAURANT LIST ORDERS
+    Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
+2. Funkcja RESTAURANT INFO
+    Funkcja ta ma na celu ułatwienie zebrania wszystkch potrzebnych informacji o danej restauracji, takich jak: adres, kontakt itp. Zwraca je ona dla podenego id restauracji.
 
-*** Procedura RESTAURANTS ADD CUISNE TO RESTAURANT
-Każda restauracja może określiś jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
-
-*** Funkcja
+** Klienci
+*** Procedury
+1. Procedura CLIENTS CHANGE ADDRESS
+    Umożliwia zmianę adresu na wypadek błędu lub zmienienia miejsca zamieszkania przez klienta. Wykorzystuje funkcję pomocniczą: CREATE ADDRESS IF NOT EXISTS
+2. Procedura CLIENTS CHANGE CONTACTINFO
+    Umożliwia zmianę informacji kontaktowych na wypadek błędu lub ich zmiany przez klienta, wykorzystuje funkcję pomocniczą: CREATE CONTACTINFO IF NOT EXISTS.
+3. Procedura CLIENTS CHANGE NAME
+    Umożliwia zmianę imienia i nazwiska w wypadku błędu lub ich zmiany przez klienta. Pokazuje średni koszt zamówienia dla danego typu płatności, w ramach ciekawostki
+*** Funkcje
+1. Funkcja CREATE CLIENT IF NOT EXISTS
+    Umożliwia utworzenie klienta jeśli ten nie istnieje. Zwraca id utworzonego klienta. Wykorzystuje funkcje pomocnicze: CREATE CONTACTINFO IF NOT EXISTS oraz CREATE ADRESS IF NOT EXISTS.
+2. Funkcja CLIENTS LIST ORDERS
 
 ** Funkcje i procedury pomocnicze
 Część funkcji i procedur może być używana w wielu widokach, gdyż np. dodają one miasto lub nowy adres. A adresy restauracji, klientów i dostawców przechowywane są w tej samej tabeli, więc każdy z tych widoków może dodawać adres korzystając z tej samej funkcji.
-*** Funkcja CREATE CITY IF NOT EXISTS
-Dodaje miasto jeżeli nie istnieje w tabeli. Jeżeli miasto już istnieje to zwracany jest jego id.
-*** Funkcja CREATE CONTACT INFO IF NOT EXISTS
-Podobnie do poprzedniej funkcji, dodajemy informacje kontaktowe do tablicy o ile ich tam nie ma i zwracamy id. Jeżeli dane istnieją to zwracamy ich id.
-*** Funkcja CREATE ADDRESS IF NOT EXISTS
-Tworzy ona adres w tabeli o ile go tam nie ma i zwraca jego id.
+1. Funkcja CREATE CITY IF NOT EXISTS
+    Dodaje miasto jeżeli nie istnieje w tabeli. Jeżeli miasto już istnieje to zwracany jest jego id.
+2. Funkcja CREATE CONTACT INFO IF NOT EXISTS
+    Podobnie do poprzedniej funkcji, dodajemy informacje kontaktowe do tablicy o ile ich tam nie ma i zwracamy id. Jeżeli dane istnieją to zwracamy ich id.
+3. Funkcja CREATE ADDRESS IF NOT EXISTS
+    Tworzy ona adres w tabeli o ile go tam nie ma i zwraca jego id.
+4. Funkcja CLIENTS AVAILABLE RESTAURANTS
+    wypisuje restauracje dostępne w mieście klienta
+5. CLIENTS AVAILABLE DISHES
+    Wypisuje dostępne dania dla danego klienta (według miasta, wykorzystuje funkcję CLIENTS AVAILABLE RESTAURANTS.
+6. CLIENTS NEW ORDER
+    Utworzenie nowego zamówienia przez klienta.
+7. PAYMENT TYPE AVG ORDER COST
+    Pokazuje średni koszt zamówienia dla danego typu płatności, w ramach ciekawostki.
+
 
 * Frontend
 Do stworzenia strony wykorzystaliśmy HTML i CSS (Bootstrap5). Strony te serwowane są z pomocą Flaska (Python). Przygotowaliśmy szablony stron, w pythonie wysyłamy zapytania do bazy. Następnie te szablony uzupełniane są o dane pochodzące z bazy.
