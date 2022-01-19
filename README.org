@@ -34,7 +34,7 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
 3. Procedura RESTAURANTS ADD CUISNE TO RESTAURANT
     Każda restauracja może określiś jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
 
-*** Funckcje
+*** Funkcje
 1. Funkcja RESTAURANT LIST ORDERS
     Funkcja ta ma pomóc nam, wypisując informacje o tym jakie zamówienia są dostępne. Zwraca ona id zamówienia, nazwę dania oraz ile sztuk należy przygotować. Przy czym wyświetla ona wyłącznie zamówienia dla podanej restauracji, które nie zostały jeszcze dostarczone oraz nie zostały oznaczone jako gotowe do odbioru
 2. Funkcja RESTAURANT INFO
@@ -93,6 +93,7 @@ Ważne jest aby w każdym polu formularza dotyczących danego dania wpisać dane
 #+CAPTION: Widok listy restauracji
 #+attr_latex: :width 300px :placement [H]
 [[./img/restaurants-orders.png]]
+Po kliknięciu na przycisk oznacz jako do odebrania, uruchomiona zostaje funkcja
 
 ** Klienci
 Z poziomu klientów dostępne są opcje wyświetlenia listy klientów, dodanie nowego klienta, sprawdzenie dostępnych restauracji, sprawdzenie dostępnych dań oraz złożenie zamówienia.
@@ -128,3 +129,17 @@ Analogicznie dla dostępnych dań:
 #+CAPTION: Składanie zamówienia:
 #+attr_latex: :width 300px :placement [H]
 [[./img/clients_8.png]]
+
+* Uruchamianie projektu
+Do uruchomienia projektu potrzebne są: Docker, Docker compose oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
+#+BEGIN_SRC bash
+$ docker compose up -d
+#+END_SRC
+Jeżeli baza już działa, możemy uruchomić serwer www:
+#+BEGIN_SRC bash
+$ flask run
+#+END_SRC
+Aby przejść do poszczególnych widoków należy wpisać:
+1. Klienci: [[http://localhost:5000/clients]]
+2. Restauracje: [[http://ocalhost:5000/restaurants]]
+3. Dostawcy: [[http://localhost:5000/employees]]
