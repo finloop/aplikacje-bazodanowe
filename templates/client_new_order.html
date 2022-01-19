@@ -1,0 +1,45 @@
+{% include "clients-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     {% if warning %}
+     <div class="alert alert-warning" role="alert">
+       Błąd w formularzu.
+     </div>
+     {% endif %}
+     <h1>Składanie zamówienia</h1>
+      <form id="contactForm" style="display: flex" action="/make-order" method="POST">
+       
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
+        
+				<div class="m-2 p-3 border rounded">
+					<input type="number" hidden name="client_id" value={{clientid}} />
+				  			  
+				  <div class="form-floating mb-3">
+					  <input name="dish_id" class="form-control" id="dish_id" type="number" placeholder="ID" data-sb-validations="required" />
+					  <label for="dish_id">ID dania</label>
+					  <div class="invalid-feedback" data-sb-feedback="dish_id:required">ID Dania is required.</div>
+				  </div>
+				  
+				  <div class="form-floating mb-3">
+					  <input name="quantity" class="form-control" id="quantity" type="number" placeholder="Ilość" data-sb-validations="required" />
+					  <label for="quantity">Ilość</label>
+					  <div class="invalid-feedback" data-sb-feedback="quantity:required">Ilość is required.</div>
+				  </div>	
+				  
+				  <div class="form-floating mb-3">
+					  <input name="payment_type" class="form-control" id="payment_type" type="text" placeholder="Typ płatności" data-sb-validations="required" />
+					  <label for="payment_type">Typ płatności (Karta, Gotówka, Przelew, Prepaid)</label>
+					  <div class="invalid-feedback" data-sb-feedback="payment_type:required">Typ płatności is required.</div>
+				  </div>
+				  		  		  
+				  				  
+				</div>
+				
+					<div class="d-grid">
+							<button name="submit" class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+					</div>
+		</div>
+      </form>
+  </div>
+</main>
+{% include "clients-footer.html" %}

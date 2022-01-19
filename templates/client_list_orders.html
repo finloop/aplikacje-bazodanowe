@@ -1,0 +1,32 @@
+{% include "clients-navbar.html" %}
+<main style="display: flex">
+   <div class="container px-5 my-5 border rounded bg-light pt-3">
+     {% if warning %}
+     <div class="alert alert-warning" role="alert">
+       Błąd w formularzu.
+     </div>
+     {% endif %}
+     <h1>Lista zamówień</h1>
+      <form id="contactForm" style="display: flex" action="/list-orders" method="GET">
+       
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light mt-2" style="width: 900px;">
+        
+				<div class="m-2 p-3 border rounded">
+										
+				  <div class="form-floating mb-3">
+					  <input name="client_id" class="form-control" id="client_id" type="text" placeholder="ID Klienta" data-sb-validations="required" />
+					  <label for="client_id">ID Klienta</label>
+					  <div class="invalid-feedback" data-sb-feedback="client_id:required">Id Klienta is required.</div>
+				  </div>
+				  
+				  
+				</div>
+				
+					<div class="d-grid">
+							<button name="submit" class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+					</div>
+		</div>
+      </form>
+  </div>
+</main>
+{% include "clients-footer.html" %}
