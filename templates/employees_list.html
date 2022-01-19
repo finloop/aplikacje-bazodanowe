@@ -1,0 +1,33 @@
+{% extends 'employees.html' %}
+{% block container %}
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <td scope="col">Id</td>
+            <td scope="col">Imię</td>
+            <td scope="col">Nazwisko</td>
+            <td scope="col">Adres</td>
+            <td scope="col">Miasto</td>
+            <td scope="col">Email</td>
+            <td scope="col">Nr Telefonu</td>
+            <td scope="col">Szczegóły</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees_data %}
+         <!-- Employee template -->
+            <tr>
+                <td>{{employee[0]}}</td>
+                <td>{{employee[1]}}</td>
+                <td>{{employee[2]}}</td>
+                <td>{{employee[3]}} {{employee[4]}}</td>
+                <td>{{employee[5]}}</td>
+                <td>{{employee[6]}}</td>
+                <td>{{employee[7]}}</td>
+                <td><button onclick="window.location.href='/employees/{{employee[0]}}'" type="button" class="btn btn-primary">Zarządzanie</button></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'employees.html' %}
+{% block container %}
+    <div class="row align-items-center">
+        <div class="col">
+            <form method="GET" action="/employees/{{emp_id}}/cities">
+
+                <label for="cities">Miasta</label>
+                <select class="form-select my-2" id="cities" name="city_id">
+                    <option value="">Proszę wybrać miasto</option>
+                    {% for city in cities %}
+                    <option value="{{city[0]}}">{{city[1]}}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="submit" value="Szukaj zamówień w mieście" class="my-2 btn btn-primary" />
+            </form>
+        </div>
+        <div class="col">
+            <form method="GET" action="/employees/{{emp_id}}/get_profit">
+                <label for="start" class="my-2">Początek</label>
+                <input name="start" type="date" class="my-2"/>
+                <br />
+                <label for="end" class="my-2">Koniec</label>
+                <input name="end" type="date" class="my-2"/>
+                <br />
+                <input type="submit" value="Wypisz zyski" class="my-2 btn btn-primary"/>
+            </form>
+        </div>
+        <div class="col">
+            <a href="/employees/{{emp_id}}/undelivered" class="btn btn-primary">Zamówienia</a>
+        </div>
+    </div>
+{% endblock %}

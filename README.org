@@ -1,10 +1,13 @@
-#+TITLE: Projekt aplikacje bazodanowe
+#+TITLE: Dostawy jedzenia --- ,,klon'' Uber Eats/Pyszne.pl
+#+SUBTITLE: Projekt aplikacje bazodanowe
+#+AUTHOR: Patryk Gronkiewicz 164157, Piotr Krawiec 164165, Adrian Szmyd 163914
+#+LANGUAGE: pl
 #+LATEX_HEADER: \usepackage{float}
 
 * Temat projektu
 Celem projektu było stworzenie aplikacji wykorzystującej język PL/PgSQL oraz stworzenie do niej prostego interfejsu z pomocą HTML, CSS i JavaScript.
 
-Stworzona przez nas aplikacja ma słyżyć do zamawiania jedzenia. Aplikacja na skłda się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. !!!!!!! DOPISAĆ DLA KLIENTÓW I DOSTAWCÓW !!!!!!!!
+Stworzona przez nas aplikacja ma słyżyć do zamawiania jedzenia. Aplikacja na skłda się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. Pracownicy mają możliwość odebrania i dostarczenia zamówienia, a także sprawdzenia przychodu. Kliencie natomiast mają dostęp do listy dań, a także możliwość ich zamówienia.
 
 * Baza danych
 W projekcie wykorzystano bazę PostgreSQL ze względu na możliwość łatwej jej konteneryzacji, co pozwoliło nam pracować niezależnie od systemu operacyjnego hosta. Wykorzystaliśmy gotowy schemat bazy z poprzedniego projektu.
@@ -21,7 +24,7 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
 2. Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
     Jest to najbardzej zaawansowana procedura. Na wejściu przyjmuje informacje o restauracji oraz dania w formie zagnieżdzonej listy. Na podstawie tych danych utworzona zostanie nowa restauracja wraz z jej daniami.
     #+NAME: Przykład iteracji po type ARRAY
-    #+BEGIN_SRC plpgsql
+    #+BEGIN_SRC sql
     FOREACH dish_ SLICE 1 IN ARRAY dishes_ LOOP
             SELECT MAX(id)+1 INTO dish_id FROM dishes;
             INSERT INTO dishes
@@ -52,7 +55,37 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
 1. Funkcja CREATE CLIENT IF NOT EXISTS
     Umożliwia utworzenie klienta jeśli ten nie istnieje. Zwraca id utworzonego klienta. Wykorzystuje funkcje pomocnicze: CREATE CONTACTINFO IF NOT EXISTS oraz CREATE ADRESS IF NOT EXISTS.
 2. Funkcja CLIENTS LIST ORDERS
+** Pracownicy
+*** Procedury
+1. ~deliver_order~
 
+   Po wykonaniu tej procedury zamówienie zostaje oznaczone jako dostarczone do klienta. W naszej implementacji jest to oznaczane przez wprowadzenie daty zakończenia zamówienia.
+2. ~batch_deliver~
+   Jest to najciekawsza procedura w tym module - pozwala na jednoczesne dostarczenie wielu zamówień.
+   #+begin_src sql
+    CREATE OR REPLACE PROCEDURE batch_deliver(order_ids int[])
+        LANGUAGE 'plpgsql'
+    AS $BODY$
+    DECLARE
+        order_id int;
+    BEGIN
+        FOREACH order_id in array order_ids LOOP
+            CALL deliver_order(order_id);
+        END LOOP;
+
+    END;
+    $BODY$;
+   #+end_src
+   Została w niej wykorzystana wcześniej wspomniana procedura ~deliver_order~. W naszym przypadku pozwala ona na zaznaczenie wielu zamówień w formularzu i dostarczeniu ich jednocześnie.
+3. ~take_order_from_restaurant~
+   Procedura ta pozwala na odebranie zamówienia z restauracji przez pracownika. Zostaje on wtedy przypisany do danego zamówienia przez jego ID. Wybór danego zamówienia jest możliwy na podstawie miasta, co zostało zrealizowane we frontendzie.
+*** Funkcje
+1. ~employees_list_undelivered_order~
+   Funkcja ta listuje niedostarczone jeszcze przez pracownika zamówienia. Sprawdza ona czy jest przypisana data zakończenia zamówienia oraz filtruje zamówienia tylko do tych, które należą do danego pracownika.
+2. ~employees_get_available_orders_to_take~
+   Funkcja ta wypisuje możliwe do odebrania aktualnie zamówienia. Możemy sprawdzić zamówienia dostępne w danym mieście, dzięki czemu będąc w np. Rzeszowie nie dostaniemy ofert z Gdańska czy Torunia.
+3. ~employees_get_profit~
+   Funkcja ta oblicza przychód jaki osiągnął dany pracownik w zadanym okresie. W tym przypadku została przyjęta prowizja na poziomie 5% od każdego złożonego zamówienia, co jednak możnaby było sparametryzować później.
 ** Funkcje i procedury pomocnicze
 Część funkcji i procedur może być używana w wielu widokach, gdyż np. dodają one miasto lub nowy adres. A adresy restauracji, klientów i dostawców przechowywane są w tej samej tabeli, więc każdy z tych widoków może dodawać adres korzystając z tej samej funkcji.
 1. Funkcja CREATE CITY IF NOT EXISTS
@@ -69,8 +102,6 @@ Część funkcji i procedur może być używana w wielu widokach, gdyż np. doda
     Utworzenie nowego zamówienia przez klienta.
 7. PAYMENT TYPE AVG ORDER COST
     Pokazuje średni koszt zamówienia dla danego typu płatności, w ramach ciekawostki.
-
-
 * Frontend
 Do stworzenia strony wykorzystaliśmy HTML i CSS (Bootstrap5). Strony te serwowane są z pomocą Flaska (Python). Przygotowaliśmy szablony stron, w pythonie wysyłamy zapytania do bazy. Następnie te szablony uzupełniane są o dane pochodzące z bazy.
 ** Restauracje
@@ -129,6 +160,33 @@ Analogicznie dla dostępnych dań:
 #+CAPTION: Składanie zamówienia:
 #+attr_latex: :width 300px :placement [H]
 [[./img/clients_8.png]]
+** Pracownicy
+W naszej aplikacji mamy dostępną listę pracowników. Zastępuje ona system logowania w celu uproszczenia części niepowiązanej z tematyką projektu. Możemy tam znaleźć istotne informacje nt. pracowników oraz przejście do ,,panelu sterowania''.
+
+#+caption: Lista pracowników
+#+attr_latex: :width 300px :float nil
+[[file:img/employees-list.png]]
+
+W panelu sterowania znajdują się 3 możliwe opcje, z czego 2 możliwe do konfiguracji.
+
+#+caption: ,,Panel sterowania'' pracownika
+#+attr_latex: :width 300px :float nil
+[[file:img/employees-dashboard.png]]
+
+1. Lista dostępnych zamówień - po wybraniu z wczytywanej z bazy danych listy miast odpowiedniej lokalizacji możemy przejść do listy dostępnych zamówień.
+    #+caption: Lista dostępnych zamówień
+    #+attr_latex: :width 300px :float nil
+    [[file:img/employees-available_orders.png]]
+
+2. Zarobki - po wybraniu z wygodnego menu możemy prosto wyznaczyć przychód z danego okresu
+    #+caption: Zysk pracownika w danym okresie
+    #+attr_latex: :width 300px :float nil
+    [[file:img/employees-profits.png]]
+
+3. Lista niedostarczonych zamówień - tutaj każdy pracownik może sprawdzić które zamówienia dostarczył, a których jeszcze nie. Dodatkową opcją jest oznaczenie danego zamówienia jako dostarczonego albo całej grupy zamówień.
+    #+caption: Lista niedostarczonych zamówień
+    #+attr_latex: :width 300px :float nil
+    [[file:img/employees-to_deliver.png]]
 
 * Uruchamianie projektu
 Do uruchomienia projektu potrzebne są: Docker, Docker compose oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
