@@ -103,7 +103,7 @@ CREATE OR REPLACE PROCEDURE batch_deliver(order_ids int[])
        LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
-	order_id int;
+    order_id int;
 BEGIN
     FOREACH order_id in array order_ids LOOP
         CALL deliver_order(order_id);
