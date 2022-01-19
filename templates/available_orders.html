@@ -1,0 +1,28 @@
+{% extends 'employees.html' %}
+{% block container %}
+
+    <form method="GET" action="/employees/{{emp_id}}/batch_deliver">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <td scope="col">Dodaj</td>
+                    <td scope="col">Restauracja</td>
+                    <td scope="col">Adres</td>
+                    <td scope="col">Szczegóły</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in data %}
+                    <!-- Employee template -->
+                    <tr>
+                        <td><input type="checkbox" name="orders" value="{{order[0]}}" /></td>
+                        <td>{{order[1]}}</td>
+                        <td>{{order[2]}} {{order[3]}}</td>
+                        <td><button onclick="window.location.href='/employees/{{emp_id}}/cities/{{city_id}}/{{order[0]}}'" type="button" class="btn btn-primary">Weź zamówienie</button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Zatwierdź" class="btn btn-success" />
+    </form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'employees.html' %}
+{% block container %}
+    {% if data | length == 0 %}
+        <h1>Nie masz niedostarczonych zamówień!</h1>
+    {% else %}
+    <form method="GET" action="/employees/{{emp_id}}/batch_deliver">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <td scope="col">Dodaj</td>
+                    <td scope="col">Telefon</td>
+                    <td scope="col">Adres</td>
+                    <td scope="col">Imię</td>
+                    <td scope="col">Dostarcz</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in data %}
+                    <!-- Employee template -->
+                    <tr>
+                        <td><input type="checkbox" name="orders" value="{{order[5]}}" /></td>
+                        <td>{{order[1]}}</td>
+                        <td>{{order[2]}} {{order[3]}}</td>
+                        <td>{{order[0]}}</td>
+                        <td><button onclick="window.location.href='/employees/{{emp_id}}/deliver_order/{{order[5]}}'" type="button" class="btn btn-primary">Dostarcz</button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Zatwierdź" class="btn btn-success" />
+    </form>
+    {% endif %}
+{% endblock %}
