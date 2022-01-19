@@ -201,132 +201,168 @@ Strona „Klienci” jaki i wszystkie inne składa się z paska nawigacji (z ide
 
 Kod paska nawigacji w pliku clients-navbar.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_1.png]]
+
+
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_2.png]]
 
 Kod stopki w pliku clients-footer.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_3.png]]
 
 Kod strony głównej „Lista klientów” w pliku clients.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_5.png]]
 
 Kod pliku clients-table.html odpowiadającego za pokazywanie tabeli z klientami:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_4.png]]
 
 
 Kod strony głównej „Lista klientów” w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_6.png]]
 
 Widok strony:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_7.png]]
 
 Jak widzimy Flask pobiera dane z bazy danych poprzez instrukcji SQL i wyświetla je dzięki plikowi html.
 
 Strona „Dodawanie klienta” wykorzystuje formularz, do którego wpisywane są dane klienta, odpowiadające argumentom funkcji CREATE_CLIENT_IF_NOT_EXISTS oraz przycisk „Submit”, którym zatwierdzamy dodanie nowego klienta. 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_8.png]]
 
 Kod pliku clients-create.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_9.png]]
+
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_10.png]]
 
 
 Plik Flask app.py dotyczący dodawania klienta:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_11.png]]
 
 Kod wykorzystanego zapytania SQL:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_12.png]]
 
 Strona „Dostępne restauracje” także wykorzystuje tabelę klientów, tym razem z dodatkowym przyciskiem który przekierowuje nas na stronę z listą dostępnych restauracji dla klienta o danym ID. ID klienta, który został wybrany, jest przechowane przez co może ono zostać wykorzystane przez funkcję CLIENTS_AVAILABLE_RESTAURANTS do wyświetlenia listy. 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_13.png]]
 
 Naciskając przycisk „Dostępne restauracje” zostajemy przekierowani na stronę /available-restaurants o kodzie w pliku clients_available_restaurants.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_14.png]]
 
 Oraz o kodzie w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_15.png]]
 
 Po naciśnięciu przycisku “Restauracje” przy danym kliencie, zostajemy przekierowani na stronę /available-restaurants-info wyświetlona nam strona z listą restauracji w mieście, z którego jest klient. 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_16.png]]
 
 Kod html wyświetlonej strony z pliku availalbe-restaurants-info.html: 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_17.png]]
 
 Kod strony w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_18.png]]
 
 Kod funkcji SQL CLIENTS_AVAILABLE_RESTAURANTS
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_19.png]]
 
 Analogicznie jak dla przycisku “Dostępne restauracje” bardzo podobny kod tyczy się przycisku „Dostępne dania”. Także zostaje wyświetlona tabela z informacjami dot. klientów, wraz z przyciskiem „Dania”. Po jego wciśnięciu zostajemy przekierowani na stronę z daniami dostępnymi dla wybranego przez nas klienta.
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_20.png]]
 
 Kod strony /available-dishes w pliku html clients_available_dishes.html:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_21.png]]
 
 Kod strony w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_22.png]]
 
 Wyświetlana strona po wciśnięciu przycisku „Dania”:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_23.png]]
 
 Kod strony /available-dishes-info, do której zostajemy przekierowani po wciśnięciu przycisku „Dania”, w pliku html: 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_24.png]]
 
 Kod strony w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_25.png]]
 
 Kod SQL wykorzystanej funkcji CLIENTS_AVAILABLE_DISHES:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_26.png]]
 
 Strona „Składania zamówienia” także wykorzystuje tabelę klientów, tym razem z dodatkowym przyciskiem który przekierowuje nas na stronę składania zamówienia. ID klienta, który został wybrany, jest przechowane przez co pomimo tego że nie mamy do wyboru ID klienta na stronie, może ono zostać wykorzystane przez funkcję CREATE_CLIENT_IF_NOT_EXISTS.
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_27.png]]
 
 Kod strony /make-order-clients w html: make-order-clients.html
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_28.png]]
 
 Kod strony w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_29.png]]
 
 Po wybraniu klienta jesteśmy przekierowani na stronę /make-order związaną ze składaniem zamówienia, na której wpisujemy ID dania, które chcemy zamówić wraz z jego ilością oraz typem płatności.
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_30.png]]
 
 Kod strony w pliku html: client_new_order.html
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_31.png]]
 
 Kod strony w pliku Flask app.py:
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_32.png]]
 
 Kod funkcji SQL CLIENTS_NEW_ORDER: 
 
+#+attr_latex: :width 300px :placement [H]
 [[./img/dokclients_33.png]]
 
 ** Pracownicy
@@ -382,7 +418,7 @@ W panelu sterowania znajdują się 3 możliwe opcje, z czego 2 możliwe do konfi
 * Uruchamianie projektu
 Do uruchomienia projektu potrzebne są: Docker, Docker compose, git oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
 #+BEGIN_SRC bash
-$ git clone git@github.com:finloop/aplikacje-bazodanowe.git
+$ git clone https://github.com/finloop/aplikacje-bazodanowe.git
 $ cd aplikacje-bazodanowe
 $ docker compose up -d
 #+END_SRC
