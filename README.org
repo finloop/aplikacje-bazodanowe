@@ -164,42 +164,53 @@ Analogicznie dla dostępnych dań:
 Strona „Klienci” jaki i wszystkie inne składa się z paska nawigacji (z identycznymi opcjami dla każdej ze stron), zawierającego przyciski przekierowujące do innych podstron: „Lista klientów”, „Dodawanie klienta, „Dostępne restauracje”, „Dostępne dania”, „Złóż zamówienie” oraz stopki. Ponadto w zależności od strony znajduje się na niej formularz lub tabela z wyborem klienta (rozwiązuje to problem z brakiem możliwości rejestracji/logowania, ponieważ klient może wybrać sam siebie i np. złożyć w ten sposób zamówienie).
 
 Kod paska nawigacji w pliku clients-navbar.html:
+
 [[./img/dokclients_1.png]]
 [[./img/dokclients_2.png]]
 
 Kod stopki w pliku clients-footer.html:
+
 [[./img/dokclients_3.png]]
 
 Kod strony głównej „Lista klientów” w pliku clients.html:
+
 [[./img/dokclients_5.png]]
 
 Kod pliku clients-table.html odpowiadającego za pokazywanie tabeli z klientami:
+
 [[./img/dokclients_4.png]]
 
 
 Kod strony głównej „Lista klientów” w pliku Flask app.py:
+
 [[./img/dokclients_6.png]]
 
 Widok strony:
+
 [[./img/dokclients_7.png]]
 
 Jak widzimy Flask pobiera dane z bazy danych poprzez instrukcji SQL i wyświetla je dzięki plikowi html.
 
 Strona „Dodawanie klienta” wykorzystuje formularz, do którego wpisywane są dane klienta, odpowiadające argumentom funkcji CREATE_CLIENT_IF_NOT_EXISTS oraz przycisk „Submit”, którym zatwierdzamy dodanie nowego klienta. 
+
 [[./img/dokclients_8.png]]
 
 Kod pliku clients-create.html:
+
 [[./img/dokclients_9.png]]
 [[./img/dokclients_10.png]]
 
 
 Plik Flask app.py dotyczący dodawania klienta:
+
 [[./img/dokclients_11.png]]
 
 Kod wykorzystanego zapytania SQL:
+
 [[./img/dokclients_12.png]]
 
 Strona „Dostępne restauracje” także wykorzystuje tabelę klientów, tym razem z dodatkowym przyciskiem który przekierowuje nas na stronę z listą dostępnych restauracji dla klienta o danym ID. ID klienta, który został wybrany, jest przechowane przez co może ono zostać wykorzystane przez funkcję CLIENTS_AVAILABLE_RESTAURANTS do wyświetlenia listy. 
+
 [[./img/dokclients_13.png]]
 
 Naciskając przycisk „Dostępne restauracje” zostajemy przekierowani na stronę /available-restaurants o kodzie w pliku clients_available_restaurants.html:
@@ -207,27 +218,35 @@ Naciskając przycisk „Dostępne restauracje” zostajemy przekierowani na stro
 [[./img/dokclients_14.png]]
 
 Oraz o kodzie w pliku Flask app.py:
+
 [[./img/dokclients_15.png]]
 
 Po naciśnięciu przycisku “Restauracje” przy danym kliencie, zostajemy przekierowani na stronę /available-restaurants-info wyświetlona nam strona z listą restauracji w mieście, z którego jest klient. 
+
 [[./img/dokclients_16.png]]
 
 Kod html wyświetlonej strony z pliku availalbe-restaurants-info.html: 
+
 [[./img/dokclients_17.png]]
 
 Kod strony w pliku Flask app.py:
+
 [[./img/dokclients_18.png]]
 
 Kod funkcji SQL CLIENTS_AVAILABLE_RESTAURANTS
+
 [[./img/dokclients_19.png]]
 
 Analogicznie jak dla przycisku “Dostępne restauracje” bardzo podobny kod tyczy się przycisku „Dostępne dania”. Także zostaje wyświetlona tabela z informacjami dot. klientów, wraz z przyciskiem „Dania”. Po jego wciśnięciu zostajemy przekierowani na stronę z daniami dostępnymi dla wybranego przez nas klienta.
+
 [[./img/dokclients_20.png]]
 
 Kod strony /available-dishes w pliku html clients_available_dishes.html:
+
 [[./img/dokclients_21.png]]
 
 Kod strony w pliku Flask app.py:
+
 [[./img/dokclients_22.png]]
 
 Wyświetlana strona po wciśnięciu przycisku „Dania”:
@@ -239,9 +258,11 @@ Kod strony /available-dishes-info, do której zostajemy przekierowani po wciśni
 [[./img/dokclients_24.png]]
 
 Kod strony w pliku Flask app.py:
+
 [[./img/dokclients_25.png]]
 
 Kod SQL wykorzystanej funkcji CLIENTS_AVAILABLE_DISHES:
+
 [[./img/dokclients_26.png]]
 
 Strona „Składania zamówienia” także wykorzystuje tabelę klientów, tym razem z dodatkowym przyciskiem który przekierowuje nas na stronę składania zamówienia. ID klienta, który został wybrany, jest przechowane przez co pomimo tego że nie mamy do wyboru ID klienta na stronie, może ono zostać wykorzystane przez funkcję CREATE_CLIENT_IF_NOT_EXISTS.
@@ -249,21 +270,27 @@ Strona „Składania zamówienia” także wykorzystuje tabelę klientów, tym r
 [[./img/dokclients_27.png]]
 
 Kod strony /make-order-clients w html: make-order-clients.html
+
 [[./img/dokclients_28.png]]
 
 Kod strony w pliku Flask app.py:
+
 [[./img/dokclients_29.png]]
 
 Po wybraniu klienta jesteśmy przekierowani na stronę /make-order związaną ze składaniem zamówienia, na której wpisujemy ID dania, które chcemy zamówić wraz z jego ilością oraz typem płatności.
+
 [[./img/dokclients_30.png]]
 
 Kod strony w pliku html: client_new_order.html
+
 [[./img/dokclients_31.png]]
 
 Kod strony w pliku Flask app.py:
+
 [[./img/dokclients_32.png]]
 
 Kod funkcji SQL CLIENTS_NEW_ORDER: 
+
 [[./img/dokclients_33.png]]
 
 ** Pracownicy
