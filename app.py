@@ -172,62 +172,138 @@ def restaurants_table():
     )
 
 
-@app.route("/employees/take_order")
-def take_order() -> None:
-    employee = request.args.get("employee")
-    order = request.args.get("order")
+@app.route(
+    "/employees/<int:employee_id>/cities/<int:city_id>/take_order/<int:order_id>"
+)
+def take_order(employee_id: int, order_id: int):
     with conn.cursor() as cursor:
-        cursor.execute(f"CALL take_order_from_restaurant({employee}, {order})")
+        cursor.execute(f"CALL take_order_from_restaurant({employee_id}, {order_id})")
     conn.commit()
+    return redirect(url_for("get_employees"))
 
 
-@app.route("/employees/deliver_order")
-def deliver_order() -> str:
-    order = request.args.get("order")
+@app.route("/employees/<int:emp_id>/deliver_order/<int:order_id>")
+def deliver_order(emp_id: int, order_id: int):
     with conn.cursor() as cursor:
-        cursor.execute(f"CALL deliver_order({order})")
+        cursor.execute(f"CALL deliver_order({order_id})")
     conn.commit()
-    return f"CALL deliver_order({order})"
+    return redirect(url_for("list_undelivered", emp_id=emp_id))
 
 
-@app.route("/employees/batch_deliver")
-def batch_deliver():
+@app.route("/employees/<int:emp_id>/batch_deliver")
+def batch_deliver(emp_id: int):
     orders = request.args.getlist("orders")
     orders = list(map(lambda x: int(x), orders))
     with conn.cursor() as cursor:
         cursor.execute(f"CALL batch_deliver(ARRAY{orders})")
     conn.commit()
-    return f"CALL batch_deliver(ARRAY{orders})"
+    return redirect(url_for("list_undelivered", emp_id=emp_id))
 
 
-@app.route("/employees/undelivered")
-def list_undelivered():
-    emp_id = int(request.args.get("eid"))
+@app.route("/employees/<int:emp_id>/undelivered")
+def list_undelivered(emp_id):
     with conn.cursor() as cursor:
         cursor.execute(f"SELECT * FROM employees_list_undelivered_order({emp_id});")
         results = cursor.fetchall()
-    return str(results)
+    return render_template(
+        "employees_undelivered.html",
+        data=results,
+        title="Niedostarczone zamówienia",
+        emp_id=emp_id,
+    )
 
 
-@app.route("/employees/orders_available")
-def list_available_orders():
-    city_id = int(request.args.get("cid"))
+@app.route("/employees/<int:employee_id>/cities")
+def list_available_orders(employee_id: int):
+    city_id = request.args.get("city_id")
     with conn.cursor() as cursor:
         cursor.execute(
             f"SELECT * FROM employees_get_available_orders_to_take({city_id});"
         )
         results = cursor.fetchall()
-    return str(results)
+    return render_template(
+        "available_orders.html",
+        data=results,
+        emp_id=employee_id,
+        title="Lista dostępnych zamówień",
+    )
 
 
-@app.route("/employees/get_profit")
-def get_employee_profit():
-    employee_id = int(request.args.get("eid"))
+@app.route("/employees/<int:employee_id>/get_profit")
+def get_employee_profit(employee_id):
+    """
+    Get employee's profit
+    """
     end_date = request.args.get("end")
     start_date = request.args.get("start")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"SELECT * FROM employees_get_profit({employee_id}, '{start_date}', '{end_date}')"
+            f"SELECT * FROM employees_get_profit({employee_id}, '{start_date}', '{end_date}');"
         )
         results = cursor.fetchone()
-    return str(results)
+    return render_template(
+        "employee_profit.html",
+        title="Zyski",
+        money=(
+            str(results[0]) + " zł"
+            if results[0] is not None
+            else "Nie zarobiłeś nic w zadanym okresie"
+        ),
+        startdate=start_date,
+        enddate=end_date,
+    )
+
+
+@app.route("/employees")
+def get_employees():
+    """
+    Show all employees
+    """
+    query = """
+    select e.id, e.fname, e.lname, a.street, a.address, c.name, ci.email, ci.phonenumber
+    from employees as e
+    inner join address as a on a.id = e.addressid
+    inner join cities as c on c.id = a.cityid
+    inner join contactinfo as ci on e.contactinfoid = ci.id;
+    """
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        data = cursor.fetchall()
+
+    return render_template(
+        "employees_list.html", employees_data=data, title="Lista pracowników"
+    )
+
+
+@app.route("/employees/<int:emp_id>")
+def get_employee(emp_id: int):
+    """
+    It's employee's dashboard
+
+    It shows a bit of options:
+    - take order - it's available after filtering the cities
+    - get profit - show how much employee earned in given period
+    - deliver order - deliver single order
+    - deliver orders - deliver few orders
+    Arguments
+    ---------
+    emp_id: int
+        Employee's ID
+
+    Returns
+    -------
+    Response
+        Rendered template
+    """
+    query = "SELECT id, name from CITIES ORDER BY name;"
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        cities = cursor.fetchall()
+    return render_template(
+        "employees_dashboard.html",
+        emp_id=emp_id,
+        cities=cities,
+        title="Zarządzanie pracownikiem",
+    )
+
+
