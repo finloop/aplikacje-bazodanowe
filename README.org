@@ -7,7 +7,7 @@
 * Temat projektu
 Celem projektu było stworzenie aplikacji wykorzystującej język PL/PgSQL oraz stworzenie do niej prostego interfejsu z pomocą HTML, CSS i JavaScript.
 
-Stworzona przez nas aplikacja ma słyżyć do zamawiania jedzenia. Aplikacja na skłda się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. Pracownicy mają możliwość odebrania i dostarczenia zamówienia, a także sprawdzenia przychodu. Kliencie natomiast mają dostęp do listy dań, a także możliwość ich zamówienia.
+Stworzona przez nas aplikacja ma służyć do zamawiania jedzenia. Aplikacja na składa się z kilku widoków: restauracje, dostawcy i klienci. Dla każdego z tych widoków stworzyliśmy akcje, które można z ich poziomu wykonywać. Każda z restauracji może sprawdzić z ilu dań składa się dane zamówienie, jeżeli je dokończy to może oznaczyć je jako zakończone. Pracownicy mają możliwość odebrania i dostarczenia zamówienia, a także sprawdzenia przychodu. Klienci natomiast mają dostęp do listy dań, a także możliwość ich zamówienia.
 
 * Baza danych
 W projekcie wykorzystano bazę PostgreSQL ze względu na możliwość łatwej jej konteneryzacji, co pozwoliło nam pracować niezależnie od systemu operacyjnego hosta. Wykorzystaliśmy gotowy schemat bazy z poprzedniego projektu.
@@ -18,7 +18,7 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
 
 ** Restauracje
 *** Procedury
-1. Procedura RESTAURAN MAKE ORDER READY
+1. Procedura RESTAURANT MAKE ORDER READY
     Mając już listę zamówień, które należy dokończyć restauracja może wybrać zamówienie i oznaczyć je jako gotowe do odbioru. Pojawi się wtedy w widoku dostawców i dostawca będzie mógł je wybrać i odebrać.
 
 2. Procedura RESTAURANTS CREATE RESTAURANT IF NOT EXISTS
@@ -35,7 +35,7 @@ Schemat ten został wyeksportowany z pomocą programu SQLPlus, następnie umieś
     #+END_SRC
     W procedurze tej do wygenerowania id używamy MAX, ponieważ w MS Access dane można było wpisywać ręcznie i sprawiło to, że jeżeli wygenerujemy nowe id z pomocą sekwencji możemy otrzymać konflikt. Jest to jednak mało wydajne i należałoby to w przyszłości zmienić.
 3. Procedura RESTAURANTS ADD CUISNE TO RESTAURANT
-    Każda restauracja może określiś jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
+    Każda restauracja może określić jakie rodzaje dań sprzedaje. Prodecura ta pozwala dodawać nowe rodzaje kuchni do restauracji.
 
 *** Funkcje
 1. Funkcja RESTAURANT LIST ORDERS
