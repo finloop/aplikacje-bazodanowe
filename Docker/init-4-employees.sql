@@ -70,8 +70,8 @@ DECLARE
     sum_of_profit double precision := 0;
 BEGIN
 
-    startdate_date = TO_DATE(startdate, "YYYY-MM-DD");
-    enddate_date = TO_DATE(enddate, "YYYY-MM-DD");
+    startdate_date = TO_DATE(startdate, 'YYYY-MM-DD');
+    enddate_date = TO_DATE(enddate, 'YYYY-MM-DD');
     SELECT CAST(SUM(dishesinorder.qty*dishes.price*0.05) as float), 2 "profit" -- we assume 5% fee
         INTO sum_of_profit
         FROM dishesinorder
