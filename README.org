@@ -357,6 +357,28 @@ W panelu sterowania znajdują się 3 możliwe opcje, z czego 2 możliwe do konfi
     #+attr_latex: :width 300px :float nil
     [[file:img/employees-to_deliver.png]]
 
+#+caption: Listowanie dostępnych zamówień w mieście
+#+attr_latex: :width 300px :float nil
+[[./img/emp_avail.png]]
+#+caption: Dostarczanie pojedynczego zamówienia
+#+attr_latex: :width 300px :float nil
+[[./img/emp_deliver.png]]
+#+caption: Dostarczenie wielu zamówień jednocześnie
+#+attr_latex: :width 300px :float nil
+[[./img/emp_deliver_batch.png]]
+#+caption: Wejście do dashboardu pracownika
+#+attr_latex: :width 300px :float nil
+[[./img/emp_manage.png]]
+#+caption: Obliczanie zysku pracownika
+#+attr_latex: :width 300px :float nil
+[[./img/emp_profit.png]]
+#+caption: Przyjmowanie pojedynczego zamówienia przez pracownika
+#+attr_latex: :width 300px :float nil
+[[./img/emp_take.png]]
+#+caption: Przyjmowanie wielu zamówień przez pracownika
+#+attr_latex: :width 300px :float nil
+[[./img/emp_undelivered.png]]
+
 * Uruchamianie projektu
 Do uruchomienia projektu potrzebne są: Docker, Docker compose, git oraz python. Uruchamianie należy zacząć od uruchomienia bazy danych oraz pgAdmin do zarządzania nią. Poniższe polecenie uruchomi bazę, stworzy odpowiednie tabele, procedury, funkcje oraz umieści w nich przykładowe dane. Kod generujący je znajduje się w folderze ~Docker~ i uruchamia się w kolejności alfabetycznej, stąd nazwy plików mają format ~init-number-nazwa~.
 #+BEGIN_SRC bash
